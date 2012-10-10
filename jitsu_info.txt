@@ -1,0 +1,9 @@
+database: http://nodejitsudb316151163874.iriscouch.com:5984/
+http://nodejitsudb316151163874.iriscouch.com:5984/_utils
+
+touch README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/lesnikovskiy/fooding.git
+git push -u origin master
