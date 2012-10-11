@@ -1,0 +1,48 @@
+html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table, tr, td, th, h1, h2, h3 {
+	margin:0;
+	padding:0;
+	border:0;
+}
+
+.page {
+	width: 70%;
+	margin: 0 auto;
+	font:16px Arial;
+	color:#333;
+	padding:0;
+	text-align:left;
+}
+
+.page nav {
+	margin:10px 0 0 0;
+	padding:0;
+	float: left;
+	width:20%;
+}
+
+.page section {
+	float:right;
+	width:78%;	
+	padding:0 10px;
+}
+
+.page footer {
+	clear:both;
+}
+
+.page nav a:link, a:active, a:visited {
+	display:block;
+	background:Silver;
+	color:#FFF;
+	margin:0;
+	padding:3px;
+	text-decoration:none;
+	cursor:pointer;
+	margin:0 0 2px 0;
+	font-weight:bold;
+	border-radius:7px;
+}
+
+.page nav a:hover {
+	background:Gray;
+}

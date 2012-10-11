@@ -7,14 +7,19 @@
 	<%- scripts%>
 </head>
 <body>
-	<header>
-		<%- blocks.header %>
-	</header>
-	<section>
-		<%- body %>
-	</section>
-	<footer>
-		<%- blocks.footer %>
-	</footer>
+	<div class="page">
+		<header>
+			<%- blocks.header %>
+		</header>
+		<nav>
+			<%- partial('menu') %>
+		</nav>
+		<section>
+			<%- body %>
+		</section>
+		<footer>
+			<%- blocks.footer %>
+		</footer>
+	</div>
 </body>
 </html>
