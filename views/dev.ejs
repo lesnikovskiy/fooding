@@ -1,0 +1,34 @@
+<% layout('layout') %>
+<% script('/jquery-1.8.2.min.js') %>
+<% script('/main.js') %>
+<% stylesheet('/styles.css') %>
+
+<h1><%= title %></h1>
+<h3>Create views</h3>
+<div id="views">
+	<a class="create-view" href="/dev/products/all">Create products/all view</a>
+</div>
+<script type="text/javascript">
+	$('#views .create-view').click(function() {
+		$.ajax({
+			type: 'GET',
+			url: $(this).attr('href'),
+			success: function(res) {
+				if (res) {
+					if (res.hasOwnProperty('ok')) {
+						
+					}
+					
+					if (res.hasOwnProperty('error')) {
+						alert('error');
+					}
+				}
+			}
+		});
+	
+		return false;
+	});
+</script>
+
+<% block('header', '') %>
+<% block('footer', '') %>
