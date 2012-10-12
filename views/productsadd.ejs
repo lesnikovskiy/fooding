@@ -4,10 +4,10 @@
 <% stylesheet('/styles.css') %>
 
 <h1><%= message %></h1>
-<div class="common-form" id="new-product">
+<div class="common-form">
 	<fieldset>
 		<legend><%= legend %></legend>
-		<form action="/products/add" id="new-product" method="post">
+		<form action="/api/products/add" id="new-product-form" method="post">
 			<label for="name">Product name:</label>
 			<input type="text" name="name" id="name" />
 			<label for="price">Product price:</label>
