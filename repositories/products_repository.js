@@ -1,9 +1,9 @@
 var cradle = require('cradle');
 var db_init = require('./db_init');
-var server_validation = require('./server_validation');
 
 module.exports = (function() {
 	var products = 'products';
+	
 	return {
 		all: function(callback) {
 			var db = db_init.connect(products);
@@ -17,12 +17,7 @@ module.exports = (function() {
 				}
 			});
 		},
-		save: function(product, callback) {
-			var validation = server_validation.validate(product, ['name', 'price']);
-			if (!validation.isValid) {
-				callback(validation, null);
-			}
-			
+		save: function(product, callback) {			
 			var db = db_init.connect(products);
 			db.save(product, function(err, response) {
 				if (err)

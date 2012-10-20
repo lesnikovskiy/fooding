@@ -21,7 +21,7 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$('#new-product-form').submit(function() {
+	$('#add-product-menu').submit(function() {
 		$.ajax({
 			beforeSend: function(xhr) {
 				xhr.setRequestHeader('x-powered-with', 'XMLHttpRequest')
