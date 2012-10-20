@@ -15,13 +15,13 @@
 })(jQuery);
 
 $(document).ready(function() {
-	$('#add-product-menu').click(function() {
-		// todo: show form
+	$('#add-product-link').click(function() {
+		$('#modal-dialog').center().fadeIn();
 
 		return false;
 	});
 
-	$('#add-product-menu').submit(function() {
+	$('#add-product-link').submit(function() {
 		$.ajax({
 			beforeSend: function(xhr) {
 				xhr.setRequestHeader('x-powered-with', 'XMLHttpRequest')

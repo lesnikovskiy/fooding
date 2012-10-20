@@ -8,6 +8,10 @@
 <div id="views">
 	<a class="create-view" href="/dev/products/all">Create products/all view</a>
 </div>
+<div id="modal-dialog">
+	<div id="response-message"></div>
+	<input type="button" id="closeButton" value="OK" />
+</div>
 <script type="text/javascript">
 	$('#views .create-view').click(function() {
 		$.ajax({
@@ -15,18 +19,22 @@
 			url: $(this).attr('href'),
 			success: function(res) {
 				if (res) {
-					if (res.hasOwnProperty('ok')) {
-						
-					}
-					
-					if (res.hasOwnProperty('error')) {
-						alert('error');
-					}
+					var msg = '';
+					$.each(res, function(k, v) {
+						msg += k + ': ' + v + '<br />';
+					});
+
+					$('#modal-dialog').center().fadeIn();
+					$('#response-message').html(msg);
 				}
 			}
 		});
 	
 		return false;
+	});
+
+	$('#closeButton').click(function() {
+		$('#modal-dialog').fadeOut();
 	});
 </script>
 

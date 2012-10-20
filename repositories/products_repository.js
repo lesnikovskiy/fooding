@@ -3,7 +3,7 @@ var db_init = require('./db_init');
 
 module.exports = (function() {
 	var products = 'products';
-	
+
 	return {
 		all: function(callback) {
 			var db = db_init.connect(products);

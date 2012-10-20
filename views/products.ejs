@@ -4,16 +4,18 @@
 <% stylesheet('/styles.css') %>
 
 <h1><%= message %></h1>
-<div id="products"/>
-<div id="ajax-save-product">
+<a id="add-product-link" href="javascript:void(0);">Add Product</a>
+<div id="products"></div>
+<div id="modal-dialog">
 	<fieldset>
 		<legend><%= legend %></legend>
 		<form action="/api/products/add" id="new-product-form" method="post">
 			<label for="name">Product name:</label>
 			<input type="text" name="name" id="name" />
 			<label for="price">Product price:</label>
-			<input type="text" id="price" name="price" />
+			<input type="text" id="price" name="price" />			
 			<input type="submit" value="<%= saveText %>" />
+			<input type="button" id="cancelButton" value="cancel" />
 		</form>
 	</fieldset>
 </div>
@@ -24,6 +26,7 @@
 		data: {},
 		cache: false,
 		success: function(response) {
+			var response = JSON.parse(response);
 			if (response.hasOwnProperty('error')) {
 				var reason = response.hasOwnProperty('reason') ? response.reason : 'unknown';
 				$('#products').css({color: 'Red'}).html('Error occurred on the server. Reason: ' + reason);				
@@ -36,6 +39,55 @@
 				}
 			}
 		}
+	});
+
+	$('#add-product-link').click(function() {
+		$('#modal-dialog').center().fadeIn();
+
+		return false;
+	});
+
+	$('#new-product-form').submit(function() {
+		$.ajax({
+			type: 'POST',
+			data: $(this).serialize(),
+			url: $(this).attr('action'),
+			cache: false,
+			success: function(res) {
+				if (res.error) {
+					if (res.error.error && res.error.reason)
+						$('#products').css({color: 'Red'}).html('Error occurred: ' + res.error.error + ', reason ' + res.error.reason);
+				}
+				if (res.location) {
+					$.ajax({
+						type: 'GET',
+						cache: false,
+						url: res.location,
+						data: {},
+						success: function(res) {
+							var response = JSON.parse(res);
+							if (response.hasOwnProperty('error')) {
+								var reason = response.hasOwnProperty('reason') ? response.reason : 'unknown';
+								$('#products').css({color: 'Red'}).html('Error occurred on the server. Reason: ' + reason);			
+							} else {
+								for (var i = 0; i < response.length; i++) {
+									var item = $('<div />', {'class': 'entry'});
+									$('<p />', {html: '<strong>Product Name:</strong> ' + response[i].value.name + ' UAH'}).appendTo(item);
+									$('<p />', {html: '<strong>Product Price:</strong> ' + response[i].value.price + ' UAH'}).appendTo(item);
+									item.appendTo('#products');
+								}
+							}
+						}
+					});
+				}
+			}
+		});
+	
+		return false;
+	});
+
+	$('#cancelButton').click(function() {
+		$('#modal-dialog').fadeOut();
 	});
 </script>
 

@@ -85,3 +85,37 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	margin:4px 0 0 0;
 	width:500px;
 }
+
+#modal-dialog {
+	display:none;
+	background: Silver;
+	color: #FFF;
+	padding: 10px 25px;
+	border-radius:10px;
+}
+
+#modal-dialog label {
+	display: block;
+	clear: both;
+	float: left;
+}
+
+#modal-dialog input[type=text] {
+	float: right;
+	display: block;
+}
+
+#modal-dialog input[type=submit] {
+	clear: both;
+	float: left;
+	width: 100px;
+	cursor: pointer;
+}
+
+#modal-dialog input[type=button] {
+	float: right;
+	width: 100px;
+	cursor: pointer;
+}
+
+#modal-dialog fieldset { border-radius: 10px; }
