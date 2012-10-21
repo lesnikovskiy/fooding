@@ -32,25 +32,25 @@ module.exports = (function() {
 		},
 		save: function(product, callback) {			
 			var db = db_init.connect(products);
-			if (product.hasOwnProperty(id) || product.hasOwnProperty(rev)) {
-				db.save(product.id, product.rev, product, function(err, res) {
-					if (err)
-						callback(err, null);
-					if (response)
-						callback(null, res);
-				});
-			} else {
-				db.save(product, function(err, response) {
-					if (err)
-						callback(err, null);
-					if (response)
-						callback(null, response);
-				});
-			}
+			db.save(product, function(err, response) {
+				if (err)
+					callback(err, null);
+				if (response)
+					callback(null, response);
+			});
+		},
+		update: function(product, callback) {
+			var db = db_init.connect(products);
+			db.save(product.id, product.rev, product, function(err, res) {
+				if (err)
+					callback(err, null);
+				if (res)
+					callback(null, res);
+			});
 		},
 		remove: function(product, callback) {
 			var db = db_init.connect(products);
-			if (!product.hasOwnProperty(id) || !product.hasOwnProperty(rev)) {
+			if (!product.id && !product.rev) {
 				callback({
 					error: 'Unable to remove product',
 					reason: '_rev and _id must be provided'
