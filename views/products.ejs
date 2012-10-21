@@ -19,24 +19,53 @@
 		</form>
 	</fieldset>
 </div>
+<div id="modal-confirm-dialog">
+	<form action="/api/products/remove" id="remove-product-form">
+		<p id="form-info"></p>
+		<input type="hidden" name="id" id="id" />
+		<input type="hidden" name="rev" id="rev" />		
+		<input type="submit" value="remove" />
+		<input type="button" id="cancelRemoveAction" value="cancel" />
+	</form>
+</div>
 <script type="text/javascript">
+	function handleResponse(response) {
+		for (var i = 0; i < response.length; i++) {
+			var item = $('<div />', {'class': 'entry'});
+
+			$('<p />', {html: '<strong>Product Name:</strong> ' + response[i].value.name + ' UAH'}).appendTo(item);
+			$('<p />', {html: '<strong>Product Price:</strong> ' + response[i].value.price + ' UAH'}).appendTo(item);
+
+			var p = $('<p />');
+			$('<a />', {
+				id: response[i].value.id, 
+				text: 'edit', 
+				href: 'javascript:void(0);',
+				'class': 'edit-prod'
+			}).appendTo(p);
+			$('<a />', {
+				id: response[i].value.id, 
+				text: 'remove', 
+				href: 'javascript:void(0);',
+				'class': 'remv-prod'
+			}).appendTo(p);
+
+			p.appendTo(item);
+			item.appendTo('#products');
+		}
+	}
+
 	$.ajax({
 		type: 'GET',
 		url: '/api/products/list/',
 		data: {},
 		cache: false,
 		success: function(response) {
-			var response = JSON.parse(response);
 			if (response.hasOwnProperty('error')) {
 				var reason = response.hasOwnProperty('reason') ? response.reason : 'unknown';
 				$('#products').css({color: 'Red'}).html('Error occurred on the server. Reason: ' + reason);				
 			} else {
-				for (var i = 0; i < response.length; i++) {
-					var item = $('<div />', {'class': 'entry'});
-					$('<p />', {html: '<strong>Product Name:</strong> ' + response[i].value.name + ' UAH'}).appendTo(item);
-					$('<p />', {html: '<strong>Product Price:</strong> ' + response[i].value.price + ' UAH'}).appendTo(item);
-					item.appendTo('#products');
-				}
+				handleResponse(response);
 			}
 		}
 	});
@@ -64,18 +93,12 @@
 						cache: false,
 						url: res.location,
 						data: {},
-						success: function(res) {
-							var response = JSON.parse(res);
+						success: function(response) {
 							if (response.hasOwnProperty('error')) {
 								var reason = response.hasOwnProperty('reason') ? response.reason : 'unknown';
 								$('#products').css({color: 'Red'}).html('Error occurred on the server. Reason: ' + reason);			
 							} else {
-								for (var i = 0; i < response.length; i++) {
-									var item = $('<div />', {'class': 'entry'});
-									$('<p />', {html: '<strong>Product Name:</strong> ' + response[i].value.name + ' UAH'}).appendTo(item);
-									$('<p />', {html: '<strong>Product Price:</strong> ' + response[i].value.price + ' UAH'}).appendTo(item);
-									item.appendTo('#products');
-								}
+								handleResponse(response);
 							}
 						}
 					});
@@ -84,10 +107,30 @@
 		});
 	
 		return false;
+	});	
+
+	$('a.remv-prod').live('click', function() {
+		$.ajax({
+			type: 'GET',
+			url: '/api/products/get/' + $(this).attr('id'),
+			cache: false,
+			success: function(res) {
+				$('#id').val(res._id);
+				$('#rev').val(res._rev);
+				$('#form-info').text('Are you sure you want to remove product: ' + res.name + ' with price ' + res.price);
+				$('#modal-confirm-dialog').center().fadeIn();
+			}
+		});
+
+		return false;
 	});
 
 	$('#cancelButton').click(function() {
 		$('#modal-dialog').fadeOut();
+	});
+
+	$('#cancelRemoveAction').click(function() {
+		$('#modal-confirm-dialog').fadeOut();
 	});
 </script>
 

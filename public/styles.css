@@ -86,7 +86,13 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	width:500px;
 }
 
-#modal-dialog {
+.entry .edit-prod, .remv-prod {
+	font:11px Arial;
+	margin: 0 7px 0 0;
+	padding: 0;
+}
+
+#modal-dialog, #modal-confirm-dialog {
 	display:none;
 	background: Silver;
 	color: #FFF;
@@ -94,28 +100,28 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	border-radius:10px;
 }
 
-#modal-dialog label {
+#modal-dialog label, #modal-confirm-dialog label {
 	display: block;
 	clear: both;
 	float: left;
 }
 
-#modal-dialog input[type=text] {
+#modal-dialog input[type=text], #modal-confirm-dialog input[type=text] {
 	float: right;
 	display: block;
 }
 
-#modal-dialog input[type=submit] {
+#modal-dialog input[type=submit], #modal-confirm-dialog input[type=submit] {
 	clear: both;
 	float: left;
 	width: 100px;
 	cursor: pointer;
 }
 
-#modal-dialog input[type=button] {
+#modal-dialog input[type=button], #modal-confirm-dialog input[type=button] {
 	float: right;
 	width: 100px;
 	cursor: pointer;
 }
 
-#modal-dialog fieldset { border-radius: 10px; }
+#modal-dialog fieldset, #modal-confirm-dialog fieldset { border-radius: 10px; }
