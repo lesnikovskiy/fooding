@@ -86,7 +86,7 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	width:500px;
 }
 
-.entry .edit-prod, .remv-prod {
+.entry .edit, .remove {
 	font:11px Arial;
 	margin: 0 7px 0 0;
 	padding: 0;
@@ -98,6 +98,7 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	color: #FFF;
 	padding: 10px 25px;
 	border-radius:10px;
+	max-width: 400px;
 }
 
 #modal-dialog label, #modal-confirm-dialog label {

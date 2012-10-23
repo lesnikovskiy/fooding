@@ -29,31 +29,42 @@
 	</form>
 </div>
 <script type="text/javascript">
-	function handleResponse(response) {
-		for (var i = 0; i < response.length; i++) {
-			var item = $('<div />', {'class': 'entry'});
+	var Response = function() {};
+	Response.prototype = (function($) {
+		return {
+			populateProducts: function(response) {
+				$('#products').html('');
+				$.each(response, function() {
+					var self = this;
 
-			$('<p />', {html: '<strong>Product Name:</strong> ' + response[i].value.name + ' UAH'}).appendTo(item);
-			$('<p />', {html: '<strong>Product Price:</strong> ' + response[i].value.price + ' UAH'}).appendTo(item);
+					var item = $('<div />').addClass('entry');
 
-			var p = $('<p />');
-			$('<a />', {
-				id: response[i].value.id, 
-				text: 'edit', 
-				href: 'javascript:void(0);',
-				'class': 'edit-prod'
-			}).appendTo(p);
-			$('<a />', {
-				id: response[i].value.id, 
-				text: 'remove', 
-				href: 'javascript:void(0);',
-				'class': 'remv-prod'
-			}).appendTo(p);
+					$('<p />', {html: '<strong>Product Name:</strong> ' + self.value.name}).appendTo(item);
+					$('<p />', {html: '<strong>Product Price:</strong> ' + self.value.price + ' (UAH)'}).appendTo(item);
 
-			p.appendTo(item);
-			item.appendTo('#products');
-		}
-	}
+					var getProdUrl = '/api/products/get/' + self.value.id;
+
+					var p = $('<p />');
+					$('<a />', {href: getProdUrl}).addClass('edit').text('edit').appendTo(p);
+					$('<a />', {href: getProdUrl}).addClass('remove').text('remove').appendTo(p);
+					
+					p.appendTo(item);
+					item.appendTo('#products');
+				});
+			},
+			populateError: function(response) {
+				if (!response.error)
+					throw 'response.error is undefined';
+
+				var errMsg = 'Error occurred on the server: ';
+				errMsg += response.error.error ? response.error.error : '[no error details]';
+				errMsg += '<br />Reason: ';
+				errMsg += response.error.reason ? response.error.reason : '[reason unkown]';
+
+				$('#products').css({color: 'Red'}).html(errMsg);
+			}
+		};
+	})(jQuery);
 
 	$.ajax({
 		type: 'GET',
@@ -62,10 +73,9 @@
 		cache: false,
 		success: function(response) {
 			if (response.hasOwnProperty('error')) {
-				var reason = response.hasOwnProperty('reason') ? response.reason : 'unknown';
-				$('#products').css({color: 'Red'}).html('Error occurred on the server. Reason: ' + reason);				
+				new Response().populateError(response);		
 			} else {
-				handleResponse(response);
+				new Response().populateProducts(response);
 			}
 		}
 	});
@@ -84,8 +94,7 @@
 			cache: false,
 			success: function(res) {
 				if (res.error) {
-					if (res.error.error && res.error.reason)
-						$('#products').css({color: 'Red'}).html('Error occurred: ' + res.error.error + ', reason ' + res.error.reason);
+					new Response().populateError(res);
 				}
 				if (res.location) {
 					$.ajax({
@@ -95,24 +104,49 @@
 						data: {},
 						success: function(response) {
 							if (response.hasOwnProperty('error')) {
-								var reason = response.hasOwnProperty('reason') ? response.reason : 'unknown';
-								$('#products').css({color: 'Red'}).html('Error occurred on the server. Reason: ' + reason);			
+								new Response().populateError(response);	
 							} else {
-								handleResponse(response);
+								new Response().populateProducts(response);
 							}
 						}
 					});
 				}
+			},
+			complete: function() {
+				$('#name').val('');
+				$('#price').val('');
+				$(this).attr('action', '/api/products/add');
+
+				$('#modal-dialog').fadeOut();
 			}
 		});
 	
 		return false;
 	});	
 
-	$('a.remv-prod').live('click', function() {
+	$('#products a.edit').live('click', function() {
 		$.ajax({
 			type: 'GET',
-			url: '/api/products/get/' + $(this).attr('id'),
+			url: $(this).attr('href'),
+			cache: false,
+			success: function(response) {
+				$('#name').val(response.name);
+				$('#price').val(response.price);
+				$('#new-product-form').attr('action', '/api/products/update');
+				$('<input />', {type: 'hidden', id: 'id', name: 'id', value: response._id}).appendTo('#new-product-form');
+				$('<input />', {type: 'hidden', id: 'rev', name: 'rev', value: response._rev}).appendTo('#new-product-form');
+
+				$('#modal-dialog').center().fadeIn();
+			}
+		});
+
+		return false;
+	});
+
+	$('#products a.remove').live('click', function() {
+		$.ajax({
+			type: 'GET',
+			url: $(this).attr('id'),
 			cache: false,
 			success: function(res) {
 				$('#id').val(res._id);
@@ -132,10 +166,26 @@
 			data: $(this).serialize(),
 			success: function(response) {
 				if (response.error) {
-					$('#products').css({color: 'Red'}).html('Error occurred on the server: ' + response.error.error + '. Reason: ' + response.error.reason);		
+					new Response().populateError(response);	
 				}
 
-				alert('deleted');
+				if (response.location) {
+					$.ajax({
+						type: 'GET',
+						url: response.location,
+						data: {},
+						cache: false,
+						success: function(response) {
+							if (response.error)
+								new Response().populateError(response)
+							else
+								new Response().populateProducts(response);
+						},
+						complete: function() {
+							$('#modal-confirm-dialog').fadeOut();
+						}
+					});
+				}
 			}
 		});
 
