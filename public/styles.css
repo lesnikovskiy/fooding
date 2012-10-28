@@ -30,6 +30,13 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	clear:both;
 }
 
+.clear {
+	clear: both;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
 .page nav a:link, a:active, a:visited {
 	display:block;
 	background:Silver;
@@ -90,6 +97,14 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	font:11px Arial;
 	margin: 0 7px 0 0;
 	padding: 0;
+}
+
+.entry .edit-button, .entry .remove-button {
+	width:80px;
+	display: block;
+	float: left;
+	cursor: pointer;
+	margin: 0 7px 0 0;
 }
 
 #modal-dialog, #modal-confirm-dialog {
