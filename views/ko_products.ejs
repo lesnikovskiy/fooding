@@ -6,7 +6,7 @@
 <% stylesheet('/styles.css') %>
 
 <h1><%= message %></h1>
-<a id="add-product-link" href="javascript:void(0);">add new product</a>
+<button id="create-product" class="create-product">Create Product</button>
 <div id="modal-dialog">
 	<form id="add-product-form" method="post" action="/api/products/add">
 		<label for="name">Product name:</label>
@@ -24,7 +24,7 @@
 		<form method="get" data-bind="attr: {action: getProductUrl }">
 			<input type="submit" value="edit" class="edit-button" />
 		</form>
-		<form method="post" data-bind="attr: {action: getRemoveUrl }">
+		<form class="delete-form" method="post" data-bind="attr: {action: getRemoveUrl }">
 			<input type="hidden" name="id" data-bind="value: id" />
 			<input type="hidden" name="rev" data-bind="value: rev" />
 			<input type="submit" value="remove" class="remove-button" />

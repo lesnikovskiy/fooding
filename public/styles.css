@@ -54,6 +54,18 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	background:Gray;
 }
 
+.profile-menu-blocks a {
+	display: block;
+	color: #333;
+	padding: 20px 20px;
+	margin: 0 17px 0 0;
+	text-decoration: none;
+	border: 1px solid #333;
+	border-radius: 10px;
+	float: left;
+	width: 250px;
+}
+
 .common-form fieldset {
 	border-radius:10px;
 	width:50%;
@@ -105,6 +117,10 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	float: left;
 	cursor: pointer;
 	margin: 0 7px 0 0;
+}
+
+.create-product {
+	cursor: pointer;	
 }
 
 #modal-dialog, #modal-confirm-dialog {

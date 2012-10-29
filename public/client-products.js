@@ -31,10 +31,8 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#add-product-link').click(function() {
+	$('#create-product').click(function() {
 		$('#modal-dialog').center().fadeIn();
-
-		return false;
 	});
 
 	$('#cancel-add').click(function() {
@@ -58,6 +56,22 @@ $(document).ready(function() {
 				$('#price').val('');
 				$('#modal-dialog').fadeOut();
 
+			}
+		});
+
+		return false;
+	});
+
+	$('.delete-form').live('submit', function() {
+		var self = $(this);
+		$.ajax({
+			type: self.attr('method'),
+			url: self.attr('action'),
+			data: self.serialize(),
+			success: function(response) {
+				productViewModel.products.remove(function() {
+					return products.id == response.response.id;
+				});
 			}
 		});
 
