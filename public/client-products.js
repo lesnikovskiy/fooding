@@ -3,6 +3,7 @@ function Product(id, rev, name, price) {
 	this.rev = ko.observable(rev);
 	this.name = ko.observable(name);
 	this.price = ko.observable(price);
+	
 	this.getProductUrl = ko.computed(function() {
 		return '/api/products/get/' + this.id();
 	}, this);
@@ -12,7 +13,15 @@ function Product(id, rev, name, price) {
 }
 
 var productViewModel = {
-	products: ko.observableArray()
+	products: ko.observableArray(),
+	addProduct: function(product) {
+		this.products.push(product);
+	},
+	removeProduct: function(id) {
+		this.products.remove(function(product) {
+			return product.id() === id;
+		});
+	}
 };
 
 $(document).ready(function() {
@@ -24,9 +33,7 @@ $(document).ready(function() {
 		url: '/api/products/list/',
 		success: function(response) {
 			$.each(response, function() {
-				productViewModel.products.push(
-					new Product(this.value.id, this.value.rev, this.value.name, this.value.price)
-				);
+				productViewModel.addProduct(new Product(this.value.id, this.value.rev, this.value.name, this.value.price));
 			});
 		}
 	});
@@ -42,20 +49,28 @@ $(document).ready(function() {
 	}); 
 
 	$('#add-product-form').submit(function() {
+		var isUpdate = $(this).attr('action') === '/api/products/update' ? true : false; 
+	
 		$.ajax({
 			type: $(this).attr('method'),
 			url: $(this).attr('action'),
 			data: $(this).serialize(),
 			success: function(response) {
-				productViewModel.products.push(
-					new Product(response.response.id, response.response.rev, $('#name').val(), $('#price').val())
-				);
+				if (!isUpdate) {
+					productViewModel.products.push(
+						new Product(response.response.id, response.response.rev, $('#name').val(), $('#price').val())
+					);
+				} else {				
+					// todo: decide what to to with updates
+				}
 			},
 			complete: function() {
 				$('#name').val('');
 				$('#price').val('');
+				$('#add-product-form').attr('action', '/api/products/add');
+				$('#_id, #_rev').remove();
+				
 				$('#modal-dialog').fadeOut();
-
 			}
 		});
 
@@ -64,17 +79,43 @@ $(document).ready(function() {
 
 	$('.delete-form').live('submit', function() {
 		var self = $(this);
-		$.ajax({
+		$.ajax({		
 			type: self.attr('method'),
 			url: self.attr('action'),
 			data: self.serialize(),
 			success: function(response) {
-				productViewModel.products.remove(function() {
-					return products.id == response.response.id;
-				});
+				if (response.error)
+					alert('error');
+				if (response.response) {
+					var id = response.response.id;	
+					productViewModel.removeProduct(id);
+				}
 			}
 		});
 
+		return false;
+	});
+	
+	$('.edit-form').live('submit', function() {
+		$.ajax({
+			type: $(this).attr('method'),
+			url: $(this).attr('action'),
+			data: {},
+			success: function(response) {
+				if (response) {		
+					$('#name').val(response.name);
+					$('#price').val(response.price);
+					
+					$('<input />', {type: 'hidden', name: 'id', id: "_id", value: response._id}).appendTo('#add-product-form');
+					$('<input />', {type: 'hidden', name: 'rev', id: "_rev", value: response._rev}).appendTo('#add-product-form');
+					
+					$('#add-product-form').attr('action', '/api/products/update');
+				
+					$('#modal-dialog').center().fadeIn();
+				}
+			}
+		});
+	
 		return false;
 	});
 });

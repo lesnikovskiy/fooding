@@ -21,7 +21,7 @@
 	<div class="entry">
 		<p><strong>Product Name:</strong> <span data-bind="text: name"></span></p>
 		<p><strong>Price:</strong> <span data-bind="text: price"></span></p>
-		<form method="get" data-bind="attr: {action: getProductUrl }">
+		<form class="edit-form" method="get" data-bind="attr: {action: getProductUrl }">
 			<input type="submit" value="edit" class="edit-button" />
 		</form>
 		<form class="delete-form" method="post" data-bind="attr: {action: getRemoveUrl }">
