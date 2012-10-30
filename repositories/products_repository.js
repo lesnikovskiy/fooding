@@ -1,5 +1,6 @@
 var cradle = require('cradle');
 var db_init = require('./db_init');
+var util = require('util');
 
 module.exports = (function() {
 	var products = 'products';
@@ -30,9 +31,9 @@ module.exports = (function() {
 					callback(null, response);
 			});
 		},
-		save: function(product, callback) {			
-			var db = db_init.connect(products);
-			db.save(product, function(err, response) {
+		save: function(product, callback) {	
+			var db = db_init.connect(products);			
+			db.save(product, function(err, response) {		
 				if (err)
 					callback(err, null);
 				if (response)
@@ -40,8 +41,15 @@ module.exports = (function() {
 			});
 		},
 		update: function(product, callback) {
+			if (!product.id) {
+				callback({
+					error: 'Unable to update product',
+					reason: '_id must be provided'
+				}, null);
+			}
 			var db = db_init.connect(products);
-			db.save(product.id, product.rev, product, function(err, res) {
+			db.save(product.id, product, function(err, res) {
+				console.log()
 				if (err)
 					callback(err, null);
 				if (res)
