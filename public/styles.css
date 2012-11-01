@@ -157,3 +157,32 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 }
 
 #modal-dialog fieldset, #modal-confirm-dialog fieldset { border-radius: 10px; }
+
+.dev-views {
+	width: 550px;
+	margin: 0;
+	padding: 0;
+}
+
+.dev-views label {
+	width:300px;
+	display: block;
+	float: left;
+	text-align: left;
+	margin: 3px;
+	padding: 0;
+	text-align: left;
+}
+
+.dev-views input {
+	width: 200px;
+	display: block;
+	float: right;
+	margin: 3px;
+	padding: 0;
+	cursor: pointer;
+}
+.dev-views .cl {
+	clear:both;
+	border: 1px solid #333;
+}

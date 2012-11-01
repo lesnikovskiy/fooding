@@ -4,29 +4,46 @@
 <% stylesheet('/styles.css') %>
 
 <h1><%= title %></h1>
-<h3>Create views</h3>
-<div id="views">
-	<a class="create-view" href="/dev/products/all">Create products/all view</a>
+<div class="dev-views">
+	<form method="post" class="dev-create" action="/api/dev/products/all">
+		<label>Create products/all view</label>
+		<input type="submit" value="submit" />
+		<div class="cl"></div>
+	</form>
+	<form method="post" class="dev-create" action="/api/dev/accounts/all">
+		<label>Creates accounts/all view:</label>
+		<input type="submit" value="submit" />
+		<div class="cl"></div>
+	</form>
 </div>
 <div id="modal-dialog">
 	<div id="response-message"></div>
 	<input type="button" id="closeButton" value="OK" />
 </div>
 <script type="text/javascript">
-	$('#views .create-view').click(function() {
-		$.ajax({
-			type: 'GET',
-			url: $(this).attr('href'),
-			success: function(res) {
-				if (res) {
-					var msg = '';
-					$.each(res, function(k, v) {
-						msg += k + ': ' + v + '<br />';
-					});
+	function handleResponse(res) {
+		if (res) {
+			var msg = '';
+			$.each(res, function(k, v) {
+				msg += k + ': ' + v + '<br />';
 
-					$('#modal-dialog').center().fadeIn();
-					$('#response-message').html(msg);
+				if (typeof this === object) {
+					alert(this);
 				}
+			});
+
+			$('#modal-dialog').center().fadeIn();
+			$('#response-message').html(msg);
+		}
+	}
+
+	$('.dev-create').submit(function() {
+		$.ajax({
+			type: $(this).attr('method'),
+			url: $(this).attr('action'),
+			cache: false,
+			success: function(res) {
+				handleResponse(res);
 			}
 		});
 	

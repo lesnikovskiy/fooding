@@ -1,206 +1,50 @@
 <% layout('layout') %>
 <% script('/jquery-1.8.2.min.js') %>
 <% script('/knockout.min.js') %>
+<% script('/underscore-min.js') %>
 <% script('/main.js') %>
+<% script('/client-products.js') %>
 <% stylesheet('/styles.css') %>
 
 <h1><%= message %></h1>
-<a id="add-product-link" href="javascript:void(0);">Add Product</a>
-<div id="products"></div>
+<button id="create-product" class="create-product">Create Product</button>
 <div id="modal-dialog">
 	<fieldset>
-		<legend><%= legend %></legend>
-		<form action="/api/products/add" id="new-product-form" method="post">
+		<legend>New Product</legend>
+		<form id="add-product-form" method="post" action="/api/products/add">
 			<label for="name">Product name:</label>
 			<input type="text" name="name" id="name" />
 			<label for="price">Product price:</label>
-			<input type="text" id="price" name="price" />			
-			<input type="submit" value="<%= saveText %>" />
-			<input type="button" id="cancelButton" value="cancel" />
+			<input type="text" name="price" id="price" />
+			<input type="submit" value="save product" />
+			<input type="button" value="cancel" id="cancel-add" />
 		</form>
 	</fieldset>
 </div>
-<div id="modal-confirm-dialog">
-	<form action="/api/products/remove" id="remove-product-form">
-		<p id="form-info"></p>
-		<input type="hidden" name="id" id="id" />
-		<input type="hidden" name="rev" id="rev" />		
-		<input type="submit" value="remove" />
-		<input type="button" id="cancelRemoveAction" value="cancel" />
-	</form>
+<div data-bind="foreach: products">
+	<div class="entry">
+		<div data-bind="visible: itemView">
+			<p><strong>Product Name:</strong> <span data-bind="text: name"></span></p>
+			<p><strong>Price:</strong> <span data-bind="text: price"></span></p>
+		</div>
+		<div data-bind="visible: editView">
+			<p><strong>Product Name:</strong> <input type="text" name="name" data-bind="value: name" /></p>
+			<p><strong>Price:</strong> <input type="text" name="price" data-bind="value: price" /></p>
+			<input class="edit-button" type="submit" value="save" data-bind="click: $root.submitUpdate" />
+			<input class="edit-button" type="button" value="cancel" data-bind="click: $root.cancelUpdate" />
+		</div>
+		<div data-bind="visible: controls">
+			<input type="button" value="edit" class="edit-button" data-bind="click: $root.updateProduct" />
+			<input type="button" value="remove" class="remove-button" data-bind="click: $root.removeProduct" />
+		</div>
+		<div class="clear"></div>
+	</div>
 </div>
+
 <script type="text/javascript">
-	var Response = function() {};
-	Response.prototype = (function($) {
-		return {
-			populateProducts: function(response) {
-				$('#products').html('');
-				$.each(response, function() {
-					var self = this;
 
-					var item = $('<div />').addClass('entry');
-
-					$('<p />', {html: '<strong>Product Name:</strong> ' + self.value.name}).appendTo(item);
-					$('<p />', {html: '<strong>Product Price:</strong> ' + self.value.price + ' (UAH)'}).appendTo(item);
-
-					var getProdUrl = '/api/products/get/' + self.value.id;
-
-					var p = $('<p />');
-					$('<a />', {href: getProdUrl}).addClass('edit').text('edit').appendTo(p);
-					$('<a />', {href: getProdUrl}).addClass('remove').text('remove').appendTo(p);
-					
-					p.appendTo(item);
-					item.appendTo('#products');
-				});
-			},
-			populateError: function(response) {
-				if (!response.error)
-					throw 'response.error is undefined';
-
-				var errMsg = 'Error occurred on the server: ';
-				errMsg += response.error.error ? response.error.error : '[no error details]';
-				errMsg += '<br />Reason: ';
-				errMsg += response.error.reason ? response.error.reason : '[reason unkown]';
-
-				$('#products').css({color: 'Red'}).html(errMsg);
-			}
-		};
-	})(jQuery);
-
-	$.ajax({
-		type: 'GET',
-		url: '/api/products/list/',
-		data: {},
-		cache: false,
-		success: function(response) {
-			if (response.hasOwnProperty('error')) {
-				new Response().populateError(response);		
-			} else {
-				new Response().populateProducts(response);
-			}
-		}
-	});
-
-	$('#add-product-link').click(function() {
-		$('#modal-dialog').center().fadeIn();
-
-		return false;
-	});
-
-	$('#new-product-form').submit(function() {
-		$.ajax({
-			type: 'POST',
-			data: $(this).serialize(),
-			url: $(this).attr('action'),
-			cache: false,
-			success: function(res) {
-				if (res.error) {
-					new Response().populateError(res);
-				}
-				if (res.location) {
-					$.ajax({
-						type: 'GET',
-						cache: false,
-						url: res.location,
-						data: {},
-						success: function(response) {
-							if (response.hasOwnProperty('error')) {
-								new Response().populateError(response);	
-							} else {
-								new Response().populateProducts(response);
-							}
-						}
-					});
-				}
-			},
-			complete: function() {
-				$('#name').val('');
-				$('#price').val('');
-				$(this).attr('action', '/api/products/add');
-
-				$('#modal-dialog').fadeOut();
-			}
-		});
-	
-		return false;
-	});	
-
-	$('#products a.edit').live('click', function() {
-		$.ajax({
-			type: 'GET',
-			url: $(this).attr('href'),
-			cache: false,
-			success: function(response) {
-				$('#name').val(response.name);
-				$('#price').val(response.price);
-				$('#new-product-form').attr('action', '/api/products/update');
-				$('<input />', {type: 'hidden', id: 'id', name: 'id', value: response._id}).appendTo('#new-product-form');
-				$('<input />', {type: 'hidden', id: 'rev', name: 'rev', value: response._rev}).appendTo('#new-product-form');
-
-				$('#modal-dialog').center().fadeIn();
-			}
-		});
-
-		return false;
-	});
-
-	$('#products a.remove').live('click', function() {
-		$.ajax({
-			type: 'GET',
-			url: $(this).attr('id'),
-			cache: false,
-			success: function(res) {
-				$('#id').val(res._id);
-				$('#rev').val(res._rev);
-				$('#form-info').text('Are you sure you want to remove product: ' + res.name + ' with price ' + res.price);
-				$('#modal-confirm-dialog').center().fadeIn();
-			}
-		});
-
-		return false;
-	});
-
-	$('#remove-product-form').submit(function() {
-		$.ajax({
-			type: 'POST',
-			url: $(this).attr('action'),
-			data: $(this).serialize(),
-			success: function(response) {
-				if (response.error) {
-					new Response().populateError(response);	
-				}
-
-				if (response.location) {
-					$.ajax({
-						type: 'GET',
-						url: response.location,
-						data: {},
-						cache: false,
-						success: function(response) {
-							if (response.error)
-								new Response().populateError(response)
-							else
-								new Response().populateProducts(response);
-						},
-						complete: function() {
-							$('#modal-confirm-dialog').fadeOut();
-						}
-					});
-				}
-			}
-		});
-
-		return false;
-	});
-
-	$('#cancelButton').click(function() {
-		$('#modal-dialog').fadeOut();
-	});
-
-	$('#cancelRemoveAction').click(function() {
-		$('#modal-confirm-dialog').fadeOut();
-	});
 </script>
+
 
 <% block('header', '') %>
 <% block('footer', '') %>

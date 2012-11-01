@@ -1,0 +1,41 @@
+.page {
+	width: 450px;
+	margin: 0 auto;	
+	font:16px Arial;
+	color:#333;
+	padding:0;
+}
+
+.login {
+	width: 400px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+fieldset {
+	border-radius: 10px;
+}
+
+.login label {
+	display: block;
+	clear: both;
+	width: 100px;
+	float: left;
+	margin: 3px
+}
+
+.login input[type=text], .login input[type=password] {
+	width: 200px;
+	display: block;
+	float: right;
+	margin: 3px
+}
+
+.login input[type=submit] {
+	cursor: pointer;
+	width: 200px;
+	display:block;
+	clear: both;
+	float: right;
+	margin: 3px;
+}
