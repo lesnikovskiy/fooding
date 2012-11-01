@@ -24,22 +24,14 @@
 			<p><strong>Price:</strong> <span data-bind="text: price"></span></p>
 		</div>
 		<div data-bind="visible: editView">
-			<form class="edit-form" method="post" data-bind="attr: {action: updateUrl }">
-				<input type="hidden" name="id" data-bind="value: id" />
-				<input type="hidden" name="rev" data-bind="value: rev" />
-				<p><strong>Product Name:</strong> <input type="text" name="name" data-bind="value: name" /></p>
-				<p><strong>Price:</strong> <input type="text" name="price" data-bind="value: price" /></p>
-				<input class="edit-button" type="submit" value="save" />
-				<input class="edit-button" type="button" value="cancel" data-bind="click: $root.cancelUpdate" />
-			</form>
+			<p><strong>Product Name:</strong> <input type="text" name="name" data-bind="value: name" /></p>
+			<p><strong>Price:</strong> <input type="text" name="price" data-bind="value: price" /></p>
+			<input class="edit-button" type="submit" value="save" data-bind="click: $root.submitUpdate" />
+			<input class="edit-button" type="button" value="cancel" data-bind="click: $root.cancelUpdate" />
 		</div>
 		<div data-bind="visible: controls">
 			<input type="button" value="edit" class="edit-button" data-bind="click: $root.updateProduct" />
-			<form class="delete-form" method="post" data-bind="attr: {action: removeUrl }">
-				<input type="hidden" name="id" data-bind="value: id" />
-				<input type="hidden" name="rev" data-bind="value: rev" />
-				<input type="submit" value="remove" class="remove-button" />
-			</form>
+			<input type="button" value="remove" class="remove-button" data-bind="click: $root.removeProduct" />
 		</div>
 		<div class="clear"></div>
 	</div>

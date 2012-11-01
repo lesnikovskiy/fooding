@@ -1,3 +1,24 @@
+var utils = (function() {
+	return {
+		serialize: function(jsObject) {
+			var items = [];
+		
+			for (var i in jsObject) {
+				if (typeof jsObject[i] == 'function') {
+					var item  = i + '=' + encodeURIComponent(jsObject[i]());
+				} else {					
+					var item = i + '=' + encodeURIComponent(jsObject[i]);
+				}
+				
+				if (item)
+					items.push(item);
+			}
+			
+			return items.join('&');
+		}
+	};
+})();
+
 function Product(id, rev, name, price) {
 	this.id = ko.observable(id);
 	this.rev = ko.observable(rev);
@@ -20,9 +41,20 @@ var productViewModel = {
 	addProduct: function(product) {
 		this.products.push(product);
 	},
-	removeProduct: function(id) {
-		this.products.remove(function(product) {
-			return product.id() === id;
+	removeProduct: function(product) {
+		var p = product;
+		$.ajax({		
+			type: 'POST',
+			url: p.removeUrl,
+			data: utils.serialize(p),
+			success: function(response) {
+				if (response.error)
+					console.log('error');
+				if (response.response) {
+					if (response.response.ok)
+						productViewModel.products.remove(p);
+				}
+			}
 		});
 	},
 	updateProduct: function(product) {
@@ -34,6 +66,33 @@ var productViewModel = {
 		product.itemView(true);
 		product.editView(false);
 		product.controls(true);
+	},
+	submitUpdate: function(product) {
+		var p = product;	
+		$.ajax({
+			type: 'POST',
+			url: p.updateUrl,
+			data: utils.serialize(p),
+			success: function(response) {
+				if (response) {	
+					if (response.response) {
+						console.log(response.response.ok);
+						if (response.response.rev)
+							p.rev(response.response.rev);
+					}
+
+					if (response.error)
+						console.log('error');
+				}
+			},
+			complete: function() {
+				p.itemView(true);
+				p.editView(false);
+				p.controls(true);
+			}
+		});
+	
+		return false;
 	}
 };
 
@@ -61,8 +120,7 @@ $(document).ready(function() {
 		return false;
 	}); 
 
-	$('#add-product-form').submit(function() {
-	
+	$('#add-product-form').submit(function() {	
 		$.ajax({
 			type: $(this).attr('method'),
 			url: $(this).attr('action'),
@@ -82,7 +140,7 @@ $(document).ready(function() {
 
 		return false;
 	});
-
+/*
 	$('.delete-form').live('submit', function() {
 		var self = $(this);
 		$.ajax({		
@@ -100,8 +158,8 @@ $(document).ready(function() {
 		});
 
 		return false;
-	});
-	
+	});*/
+	/*
 	$('.edit-form').live('submit', function() {
 		$.ajax({
 			type: $(this).attr('method'),
@@ -110,18 +168,15 @@ $(document).ready(function() {
 			success: function(response) {
 				if (response) {	
 					if (response.response) {
-						alert(response.response.ok);
-
-						$parent.cancelUpdate();
+						console.log(response.response.ok);
 					}
 
 					if (response.error)
-						alert('error');
-					// todo update the observable array
+						console.log('error');
 				}
 			}
 		});
 	
 		return false;
-	});
+	});*/
 });
