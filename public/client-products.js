@@ -1,18 +1,23 @@
 var utils = (function() {
+	_.mixin({
+		encode: function(string) {
+			return encodeURIComponent(string);
+		}
+	});
+
 	return {
 		serialize: function(jsObject) {
 			var items = [];
-		
-			for (var i in jsObject) {
-				if (typeof jsObject[i] == 'function') {
-					var item  = i + '=' + encodeURIComponent(jsObject[i]());
-				} else {					
-					var item = i + '=' + encodeURIComponent(jsObject[i]);
+			
+			_.each(jsObject, function(val, key) {
+				if (_.isFunction(val)) {
+					items.push(key + '=' + _(val()).encode());
+				} else if (_.isDate(val)) {
+				    items.push(key + '=' + _(val.toUTCString()).encode());
+				} else {
+					items.push(key + '=' + _(val).encode());
 				}
-				
-				if (item)
-					items.push(item);
-			}
+			});
 			
 			return items.join('&');
 		}
@@ -43,16 +48,19 @@ var productViewModel = {
 	},
 	removeProduct: function(product) {
 		var p = product;
+		
 		$.ajax({		
 			type: 'POST',
 			url: p.removeUrl,
-			data: utils.serialize(p),
+			data: utils.serialize(_.pick(p, 'id', 'rev')),
 			success: function(response) {
-				if (response.error)
-					console.log('error');
-				if (response.response) {
-					if (response.response.ok)
-						productViewModel.products.remove(p);
+				if (response) {
+					if (_.has(response, 'error'))
+						console.log('error');
+					if (_.has(response, 'response')) {
+						if (response.response.ok)
+							productViewModel.products.remove(p);
+					}
 				}
 			}
 		});
@@ -72,16 +80,16 @@ var productViewModel = {
 		$.ajax({
 			type: 'POST',
 			url: p.updateUrl,
-			data: utils.serialize(p),
+			data: utils.serialize(_.pick(p, 'id', 'rev', 'name', 'price')),
 			success: function(response) {
 				if (response) {	
-					if (response.response) {
+					if (_.has(response, 'response')) {
 						console.log(response.response.ok);
 						if (response.response.rev)
 							p.rev(response.response.rev);
 					}
 
-					if (response.error)
+					if (_.has(response, 'error'))
 						console.log('error');
 				}
 			},
@@ -126,9 +134,21 @@ $(document).ready(function() {
 			url: $(this).attr('action'),
 			data: $(this).serialize(),
 			success: function(response) {
-				productViewModel.products.push(
-					new Product(response.response.id, response.response.rev, $('#name').val(), $('#price').val())
-				);
+				if (_.has(response, 'error')) {
+					if (response.error.error) {
+						console.log('Error: ' + response.error.error)
+					}
+					
+					if (response.error.reason) {
+						console.log('Reason: ' + response.error.reason);
+					}
+				}
+				
+				if (_.has(response, 'response')) {
+					productViewModel.products.push(
+						new Product(response.response.id, response.response.rev, $('#name').val(), $('#price').val())
+					);
+				}
 			},
 			complete: function() {
 				$('#name').val('');
@@ -140,43 +160,4 @@ $(document).ready(function() {
 
 		return false;
 	});
-/*
-	$('.delete-form').live('submit', function() {
-		var self = $(this);
-		$.ajax({		
-			type: self.attr('method'),
-			url: self.attr('action'),
-			data: self.serialize(),
-			success: function(response) {
-				if (response.error)
-					alert('error');
-				if (response.response) {
-					var id = response.response.id;	
-					productViewModel.removeProduct(id);
-				}
-			}
-		});
-
-		return false;
-	});*/
-	/*
-	$('.edit-form').live('submit', function() {
-		$.ajax({
-			type: $(this).attr('method'),
-			url: $(this).attr('action'),
-			data: $(this).serialize(),
-			success: function(response) {
-				if (response) {	
-					if (response.response) {
-						console.log(response.response.ok);
-					}
-
-					if (response.error)
-						console.log('error');
-				}
-			}
-		});
-	
-		return false;
-	});*/
 });
