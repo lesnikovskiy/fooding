@@ -107,6 +107,49 @@ var productViewModel = {
 $(document).ready(function() {
 	ko.applyBindings(productViewModel);
 
+	$.validator.addMethod('price', function(value) {
+		return /^\d*\.?\d{0,2}$/gi.test(value);
+	});
+
+	$('#add-product-form').validate({
+		submitHandler: function(form) {
+			$(form).ajaxSubmit({
+				type: 'POST',
+				url: '/api/products/add',
+				success: function(response) {
+					if (_.has(response, 'error')) {
+						if (response.error.error) {
+							console.log('Error: ' + response.error.error)
+						}
+						
+						if (response.error.reason) {
+							console.log('Reason: ' + response.error.reason);
+						}
+					}
+					
+					if (_.has(response, 'response')) {
+						productViewModel.products.push(
+							new Product(response.response.id, response.response.rev, $('#name').val(), $('#price').val())
+						);
+					}
+
+					$('#modal-dialog').fadeOut();
+				}
+			});
+		},
+		rules: {
+			name: 'required',
+			price: {
+				required: true,
+				price: true
+			}
+		},
+		messages: {
+			name: 'Product name is required',
+			price: 'Price is required in correct format e.g. 12.55'
+		}
+	});
+
 	$.ajax({
 		type: 'GET',
 		cache: false,
@@ -127,7 +170,7 @@ $(document).ready(function() {
 
 		return false;
 	}); 
-
+/*
 	$('#add-product-form').submit(function() {	
 		$.ajax({
 			type: $(this).attr('method'),
@@ -160,4 +203,5 @@ $(document).ready(function() {
 
 		return false;
 	});
+*/
 });

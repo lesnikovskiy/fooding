@@ -132,31 +132,41 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	max-width: 400px;
 }
 
-#modal-dialog label, #modal-confirm-dialog label {
+#modal-dialog label {
 	display: block;
 	clear: both;
 	float: left;
 }
 
-#modal-dialog input[type=text], #modal-confirm-dialog input[type=text] {
+#modal-dialog input[type=text] {
 	float: right;
 	display: block;
+	width: 170px
 }
 
-#modal-dialog input[type=submit], #modal-confirm-dialog input[type=submit] {
+#modal-dialog input[type=submit] {
 	clear: both;
 	float: left;
 	width: 100px;
 	cursor: pointer;
 }
 
-#modal-dialog input[type=button], #modal-confirm-dialog input[type=button] {
+#modal-dialog input[type=button] {
 	float: right;
 	width: 100px;
 	cursor: pointer;
 }
 
-#modal-dialog fieldset, #modal-confirm-dialog fieldset { border-radius: 10px; }
+#modal-dialog fieldset { border-radius: 10px; }
+
+#modal-dialog label.error {
+	color:red;
+	font-size:12px;
+	font-style: italic;
+	float: right;
+	text-align: left;
+	width: 170px;
+}
 
 .dev-views {
 	width: 550px;

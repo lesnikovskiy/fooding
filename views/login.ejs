@@ -3,19 +3,37 @@
 <head>
 	<meta charset="UTF-8">
 	<title><%= title %></title>	
-	<link rel="stylesheet" href="/login.css" type="text/css" />
+	<link rel="stylesheet" href="/css/account.css" type="text/css" />
+	<script type="text/javascript" src="/scripts/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="/scripts/jquery.validate.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$('#login-form').validate({
+			rules: {
+				login: 'required',
+				pass: 'required'
+			},
+			messages: {
+				login: 'Login is required',
+				pass: 'Password is required'
+			}
+		});
+	});
+	</script>
 </head>
 <body>
 	<div class="page">
 		<div class="login">
 			<fieldset>
 				<legend>Enter your credentials</legend>
-				<form method="post" action="/login">
+				<form id="login-form" method="post" action="/login">
 					<label for="login">Email:</label>
 					<input type="text" name="login" id="login" />
 					<label for="pass">Password:</label>
 					<input type="password" name="pass" id="pass" />
 					<input type="submit" value="login" />
+					<a class="register" href="/register">Register</a>
+					<div class="clear"></div>
 				</form>
 			</fieldset>
 		</div>

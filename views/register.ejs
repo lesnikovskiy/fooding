@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title><%= title %></title>	
+	<link rel="stylesheet" href="/css/account.css" type="text/css" />
+	<script type="text/javascript" src="/scripts/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="/scripts/jquery.validate.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$('#registration-form').validate({
+			rules: {
+				firstName: 'required',
+				lastName: 'required',
+				nick: 'required',
+				email: {
+					required: true,
+					email: true
+				},
+				pass: 'required',
+				passConfirm: {
+					required: true,
+					equalTo: '#pass'
+				}
+			},
+			messages: {
+				firstName: 'First Name is required',
+				lastName: 'Last Name is required',
+				nick: 'Nickname is required',				
+				email: 'Email address is invalid',
+				pass: 'Password is required',
+				passConfirm: 'Passwords do not match'
+			}
+		});
+	});
+	</script>
+</head>
+<body>
+	<div class="page">
+		<div class="registration">
+			<fieldset>
+				<legend>Enter registration info</legend>
+				<form id="registration-form" method="post" action="/login">
+					<label for="firstName">First Name:</label>
+					<input type="text" name="firstName" id="firstName" />
+					<label for="lastName">Last Name:</label>
+					<input type="text" name="lastName" id="lastName" />
+					<label for="nick">Nickname:</label>
+					<input type="text" name="nick" id="nick" />
+					<label for="email">Email:</label>
+					<input type="text" name="email" id="email" />
+					<label for="pass">Password:</label>
+					<input type="password" name="pass" id="pass" />
+					<label for="passConfirm">Confirm Password:</label>
+					<input type="password" name="passConfirm" id="passConfirm" />
+					<label for="bio">Bio:</label>
+					<textarea name="bio" id="bio" cols="20" rows="7"></textarea>
+					<label for="location">Location:</label>
+					<input type="text" name="location" id="location" />
+					<input type="submit" value="Register Now" />
+					<div class="clear"></div>
+				</form>
+			</fieldset>
+		</div>
+	</div>
+</body>
+</html>
