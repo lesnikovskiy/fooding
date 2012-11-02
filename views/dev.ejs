@@ -1,6 +1,7 @@
 <% layout('layout') %>
 <% script('/jquery-1.8.2.min.js') %>
 <% script('/main.js') %>
+<% script('/underscore-min.js') %>
 <% stylesheet('/styles.css') %>
 
 <h1><%= title %></h1>
@@ -21,19 +22,58 @@
 	<input type="button" id="closeButton" value="OK" />
 </div>
 <script type="text/javascript">
-	function handleResponse(res) {
-		if (res) {
-			var msg = '';
-			$.each(res, function(k, v) {
-				msg += k + ': ' + v + '<br />';
-
-				if (typeof this === object) {
-					alert(this);
+	//Just by mistake made closure, it appends message every time it is returned from the server
+	//commented as an example for future ))
+	var closureUtil = (function() {
+		var msg = '';
+		var getMsg = function(obj, nl) {
+			_.each(obj, function(v, k) {
+				if (_.isObject(v)) {
+					getMsg(v, nl);
+				} else {
+					msg += k + ': ' + v + (nl || '<br />'); 
 				}
 			});
+			
+			return msg;
+		};
+		
+		return {
+			objectToString: function(o, nline) {
+				return getMsg(o, nline);
+			}
+		};
+	})();
+	
+	var util = (function() {		
+		var getMsg = function(obj, nl) {
+			var msg = '';
+			_.each(obj, function(v, k) {
+				if (_.isObject(v)) {
+					msg += getMsg(v, nl);
+				} else {
+					msg += k + ': ' + v + (nl || '<br />'); 
+				}
+			});
+			
+			return msg;
+		};
+		
+		return {
+			objectToString: function(o, nline) {
+				return getMsg(o, nline);
+			}
+		};
+	})();
+
+	function handleResponse(res) {
+		if (res) {
+			if (res) {
+				var msg = util.objectToString(res);
+			}
 
 			$('#modal-dialog').center().fadeIn();
-			$('#response-message').html(msg);
+			$('#response-message').html(msg || 'no info');
 		}
 	}
 
@@ -51,6 +91,7 @@
 	});
 
 	$('#closeButton').click(function() {
+		$('#response-message').html('');
 		$('#modal-dialog').fadeOut();
 	});
 </script>

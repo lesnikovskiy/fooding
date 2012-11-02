@@ -6,6 +6,22 @@ module.exports = (function () {
 	var accounts = 'accounts';
 
 	return {
+		createProductsDb: function(callback) {
+			var db = db_init.connect(products);
+			db.exists(function(err, exists) {
+				if (err) {
+					callback(err, null);
+				} else if (exists) {
+					callback({
+						error: 'cannot create database', 
+						reason: 'database already exists'
+					}, null);
+				} else {
+					db.create();
+					callback(null, {ok: 'ok'});
+				}
+			});
+		},
 		createProductsAllView: function(callback) {
 			var db = db_init.connect(products);
 			db.save('_design/products', {
