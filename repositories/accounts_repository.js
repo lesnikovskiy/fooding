@@ -5,7 +5,7 @@ var util = require('util');
 module.exports = (function() {
 	var accounts = 'accounts';
 
-	var sendResponse = function(callback, err, response) {
+	var sendResponse = function (callback, err, response) {
 		if (err)
 			callback(err, null);
 		if (response)
@@ -26,6 +26,9 @@ module.exports = (function() {
 			db.save(account, function(err, response) {
 				sendResponse(callback, err, response);
 			});
+		},
+		getAccountByEmail: function(email, callback) {
+			
 		}
 	};
 })();

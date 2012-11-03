@@ -5,7 +5,7 @@ var util = require('util');
 module.exports = (function() {
 	var products = 'products';
 
-	var sendResponse(callback, err, response) {
+	var sendResponse = function (callback, err, response) {
 		if (err) {
 			callback(err, null);
 		} else if (response) {
@@ -13,7 +13,7 @@ module.exports = (function() {
 		} else {
 			callback({error: 'error occurred', reason: 'unkown'}, null);
 		}
-	}
+	};
 
 	return {
 		all: function(callback) {

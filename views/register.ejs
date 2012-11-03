@@ -3,12 +3,59 @@
 <head>
 	<meta charset="UTF-8">
 	<title><%= title %></title>	
-	<link rel="stylesheet" href="/css/account.css" type="text/css" />
+	<link rel="stylesheet" href="/css/account.css" type="text/css" />	
 	<script type="text/javascript" src="/scripts/jquery-1.8.2.min.js"></script>
 	<script type="text/javascript" src="/scripts/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="/scripts/underscore-min.js"></script>
+	<script type="text/javascript" src="/scripts/main.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function() {
 		$('#registration-form').validate({
+			submitHandler: function(form) {
+				$.ajax({
+					type: $('#registration-form').attr('method'),
+					url: $('#registration-form').attr('action'),
+					data: $('#registration-form').serialize(),
+					success: function (response) {
+						if (response) {
+							if (_.has(response, 'statusCode')) {
+								var status = response.statusCode;
+								if (status === '201') {
+									$('#dlgMsg').show();
+									$('#dlgError').hide();
+
+									$('<span />', {text: 'Registration processed successfully!'}).appendTo('#dlgMsg');
+									if (_.has(response, 'location')) {
+										$('<a />', {href: response.location, text: '>> Go to application'}).appendTo('#dlgMsg');
+									}
+								} else if (status === '304') {
+									$('#dlgError').show();
+									$('#dlgMsg').hide();
+
+									var errMsg = 'Registration failed';
+									if (_.has(response, 'error')) {
+										errMsg += '<br />';
+										errMsg += 'Error: ';
+										errMsg += _.has(response.error, 'error') ? response.error.error : 'error occurred';
+										errMsg += '<br />';
+										errMsg += 'Reason: ';
+										errMsg += _.has(response.error, 'reason') ? response.error.reason : 'unkown';
+									}
+								}
+
+								$('#dlgError').html('registration failed');
+							}									
+						} else {
+							$('#dlgError').show();
+							$('#dlgMsg').hide();
+
+							$('#dlgError').html('unkown error');
+						}
+
+						$('#modalDialog').center().fadeIn();
+					}
+				});
+			},
 			rules: {
 				firstName: 'required',
 				lastName: 'required',
@@ -40,7 +87,7 @@
 		<div class="registration">
 			<fieldset>
 				<legend>Enter registration info</legend>
-				<form id="registration-form" method="post" action="/login">
+				<form id="registration-form" method="post" action="/api/register">
 					<label for="firstName">First Name:</label>
 					<input type="text" name="firstName" id="firstName" />
 					<label for="lastName">Last Name:</label>
@@ -62,6 +109,10 @@
 				</form>
 			</fieldset>
 		</div>
+	</div>
+	<div id="modalDialog">
+		<p id="dlgError"></p>
+		<p id="dlgMsg"></p>
 	</div>
 </body>
 </html>

@@ -101,3 +101,32 @@ label.error {
 	font-size: 12px;
 	width: 200px;
 }
+
+#modalDialog {
+	display: none;
+	width: 400px;
+	background: Silver;
+	color: #FFF;
+	border: 1px solid #333;
+	border-radius: 10px;
+}
+
+#modalDialog #dlgError {
+	color: red;
+	font: 12px Tahoma;
+	display: none;
+}
+
+#modalDialog #dlgMsg {
+	color: green;
+	font: 12px Tahoma;
+	display: none;
+	padding: 20px 25px;
+}
+
+#modalDialog #dlgMsg a {
+	color: #FFF;
+	font:12px Tahoma;
+	cursor: pointer;
+	display: block;	
+}
