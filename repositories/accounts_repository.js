@@ -5,8 +5,28 @@ var util = require('util');
 module.exports = (function() {
 	var accounts = 'accounts';
 
+	var sendResponse = function(callback, err, response) {
+		if (err)
+			callback(err, null);
+		if (response)
+			callback(null, response);
+		else
+			callback({error: 'error occurred', reason: 'unkown'}, null);
+	};
+
 	return {
-		
+		all: function(callback) {
+			var db = db_init.connect(accounts);
+			db.view('accounts/all', function(err, response) {
+				sendResponse(callback, err, response);
+			});
+		},
+		saveAccount: function(account, callback) {
+			var db = db_init.connect(accounts);
+			db.save(account, function(err, response) {
+				sendResponse(callback, err, response);
+			});
+		}
 	};
 })();
 

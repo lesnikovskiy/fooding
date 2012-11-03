@@ -30,9 +30,6 @@ function Product(id, rev, name, price) {
 	this.name = ko.observable(name);
 	this.price = ko.observable(price);
 	
-	this.getUrl = ko.computed(function() {
-		return '/api/products/get/' + this.id();
-	}, this);
 	this.removeUrl = '/api/products/remove';
 	this.updateUrl = '/api/products/update';
 
@@ -113,9 +110,10 @@ $(document).ready(function() {
 
 	$('#add-product-form').validate({
 		submitHandler: function(form) {
-			$(form).ajaxSubmit({
-				type: 'POST',
-				url: '/api/products/add',
+			$.ajax({
+				type: $('#add-product-form').attr('method'),
+				url: $('#add-product-form').attr('action'),
+				data: $('#add-product-form').serialize(),
 				success: function(response) {
 					if (_.has(response, 'error')) {
 						if (response.error.error) {
@@ -132,7 +130,11 @@ $(document).ready(function() {
 							new Product(response.response.id, response.response.rev, $('#name').val(), $('#price').val())
 						);
 					}
-
+				},
+				complete: function() {
+					$('#name').val('');
+					$('#price').val('');
+					
 					$('#modal-dialog').fadeOut();
 				}
 			});
@@ -170,38 +172,4 @@ $(document).ready(function() {
 
 		return false;
 	}); 
-/*
-	$('#add-product-form').submit(function() {	
-		$.ajax({
-			type: $(this).attr('method'),
-			url: $(this).attr('action'),
-			data: $(this).serialize(),
-			success: function(response) {
-				if (_.has(response, 'error')) {
-					if (response.error.error) {
-						console.log('Error: ' + response.error.error)
-					}
-					
-					if (response.error.reason) {
-						console.log('Reason: ' + response.error.reason);
-					}
-				}
-				
-				if (_.has(response, 'response')) {
-					productViewModel.products.push(
-						new Product(response.response.id, response.response.rev, $('#name').val(), $('#price').val())
-					);
-				}
-			},
-			complete: function() {
-				$('#name').val('');
-				$('#price').val('');
-				
-				$('#modal-dialog').fadeOut();
-			}
-		});
-
-		return false;
-	});
-*/
 });
