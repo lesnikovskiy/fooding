@@ -1,5 +1,6 @@
 var cradle = require('cradle');
 var db_init = require('./db_init');
+var _ = require('underscore');
 var util = require('util');
 
 module.exports = (function() {
@@ -28,7 +29,17 @@ module.exports = (function() {
 			});
 		},
 		getAccountByEmail: function(email, callback) {
-			
+			if (!email) {
+				sendResponse(callback, {
+					error: 'email is required',
+					reason: 'email parameter hasn\'t been provided'
+				}, null);
+			} else {
+				var db = db_init.connect(accounts);
+				db.view('getAccount/byEmail/?key=' + encodeURIComponent(email), function(err, res) {
+					sendResponse(callback, err, res);
+				});
+			}
 		}
 	};
 })();

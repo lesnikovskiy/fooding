@@ -74,6 +74,41 @@ module.exports = (function () {
 						reason: 'unknown'
 					}, null);
 			});
+		},		
+		createGetAccByEmail: function(callback) {
+			var db = db_init.connect(accounts);
+			// this will search account by email passed via ?key= parameter
+			// getAccount/byEmail/?key=lesnikovski%40gmail.com
+			db.save('_design/getAccount', {
+				byEmail: {
+					map: function(doc) {						
+						if (doc.email) {
+							emit(doc._id, {
+								id: doc._id,
+								rev: doc._rev,
+								firstName: doc.firstName,
+								lastName: doc.lastName,
+								nick: doc.nick,
+								email: doc.email,
+								pass: doc.pass,
+								bio: doc.bio ? doc.bio : '',
+								roles: doc.roles,
+								location: doc['location'] ? doc['location'] : ''
+							});
+						} else {
+							emit(null);
+						}
+					}
+				}	
+			}, function(err, res) {
+				if (err) {
+					callback(err, null);
+				} else if (res) {
+					callback(null, res);
+				} else {
+					callback({error: 'Error occurred', reason: 'unknown'}, null);
+				}
+			});
 		}
 	};	
 })();
