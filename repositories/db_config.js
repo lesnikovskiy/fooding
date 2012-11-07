@@ -1,6 +1,6 @@
 module.exports = (function() {
 	return {
-		host: '127.0.0.1',
+		host: 'localhost',
 		port: 5984,
 		login: 'admin',
 		password: 'Coffee!12'
