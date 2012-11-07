@@ -11,14 +11,17 @@ module.exports = (function () {
 			db.exists(function(err, exists) {
 				if (err) {
 					callback(err, null);
-				} else if (exists) {
+				} 
+
+				if (exists) {
 					callback({
 						error: 'cannot create database', 
 						reason: 'database already exists'
 					}, null);
-				} else {
+				}
+
+				if(!exists) {
 					db.create();
-					callback(null, {ok: 'ok'});
 				}
 			});
 		},
@@ -39,6 +42,25 @@ module.exports = (function () {
 					
 				if (response) {
 					callback(null, response);
+				}
+			});
+		},
+		createAccountsDb: function(callback) {
+			var db = db_init.connect(accounts);
+			db.exists(function(err, exists) {
+				if (err) {
+					callback(err, null);
+				} 
+
+				if (exists) {
+					callback({
+						error: 'cannot create database', 
+						reason: 'database already exists'
+					}, null);
+				}
+
+				if(!exists) {
+					db.create();
 				}
 			});
 		},
@@ -68,11 +90,6 @@ module.exports = (function () {
 					callback(err, null);
 				if (response)
 					callback(null, response);
-				else
-					callback({
-						error: 'unknown',
-						reason: 'unknown'
-					}, null);
 			});
 		},		
 		createGetAccByEmail: function(callback) {
@@ -103,10 +120,10 @@ module.exports = (function () {
 			}, function(err, res) {
 				if (err) {
 					callback(err, null);
-				} else if (res) {
+				} 
+
+				if (res) {
 					callback(null, res);
-				} else {
-					callback({error: 'Error occurred', reason: 'unknown'}, null);
 				}
 			});
 		}

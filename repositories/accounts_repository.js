@@ -7,12 +7,17 @@ module.exports = (function() {
 	var accounts = 'accounts';
 
 	var sendResponse = function (callback, err, response) {
-		if (err)
+		if (err) {
+			console.log('if (err)');
+			console.log(util.inspect(err));
 			callback(err, null);
-		if (response)
+		}
+		
+		if (response) {
+			console.log('if (response)');
+			console.log(util.inspect(response));
 			callback(null, response);
-		else
-			callback({error: 'error occurred', reason: 'unkown'}, null);
+		}
 	};
 
 	return {
@@ -34,12 +39,12 @@ module.exports = (function() {
 					error: 'email is required',
 					reason: 'email parameter hasn\'t been provided'
 				}, null);
-			} else {
-				var db = db_init.connect(accounts);
-				db.view('getAccount/byEmail/?key=' + encodeURIComponent(email), function(err, res) {
-					sendResponse(callback, err, res);
-				});
 			}
+
+			var db = db_init.connect(accounts);
+			db.view('getAccount/byEmail/?key=' + encodeURIComponent(email), function(err, res) {
+				sendResponse(callback, err, res);
+			});
 		}
 	};
 })();

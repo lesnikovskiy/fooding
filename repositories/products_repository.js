@@ -8,10 +8,10 @@ module.exports = (function() {
 	var sendResponse = function (callback, err, response) {
 		if (err) {
 			callback(err, null);
-		} else if (response) {
+		} 
+
+		if (response) {
 			callback(null, response);
-		} else {
-			callback({error: 'error occurred', reason: 'unkown'}, null);
 		}
 	};
 

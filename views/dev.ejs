@@ -6,8 +6,18 @@
 
 <h1><%= title %></h1>
 <div class="dev-views">
+	<form method="post" class="dev-create" action="/api/dev/products/db">
+		<label>Create products database</label>
+		<input type="submit" value="submit" />
+		<div class="cl"></div>
+	</form>
 	<form method="post" class="dev-create" action="/api/dev/products/all">
 		<label>Create products/all view</label>
+		<input type="submit" value="submit" />
+		<div class="cl"></div>
+	</form>
+	<form method="post" class="dev-create" action="/api/dev/accounts/db">
+		<label>Create accounts database</label>
 		<input type="submit" value="submit" />
 		<div class="cl"></div>
 	</form>
