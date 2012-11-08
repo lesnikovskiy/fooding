@@ -1,9 +1,37 @@
 <% layout('layout') %>
-<% script('/scripts/jquery-1.8.2.min.js') %>
-<% script('/scripts/main.js') %>
 <% stylesheet('/css/styles.css') %>
+<% stylesheet('/css/jquery.ui.css') %>
+<% script('/scripts/jquery-1.8.2.min.js') %>
+<% script('/scripts/jquery.validate.min.js') %>
+<% script('/scripts/jquery.autocomplete.min.js') %>
+<% script('/scripts/underscore-min.js') %>
+<% script('/scripts/main.js') %>
+<% script('/scripts/client-dishes.js') %>
 
 <h1><%= message %></h1>
+
+<div id="new-dish-panel">
+	<form class="common-form" id="new-dish-form" method="post" action="/api/dishes/save">
+		<input type="hidden" id="userid" name="userid" value="<%= userId %>" />
+		
+		<h3>Dish attributes</h3>
+		<label for="title">Name:</label>
+		<input type="text" name="title" id="title" />
+		<label for="description">Description:</label>
+		<textarea id="description" name="description" cols="20" rows="5"></textarea>
+		
+		<h3>Ingredients</h3>
+		<div id="ingredients">
+			<label for="product">Select product:</label>
+			<input type="text" name="product" value="product" />
+			<div id="product-set"></div>
+		</div>
+
+		<h3>Directions</h3>
+		<textarea id="directions" name="directions" cols="20" rows="5"></textarea>
+		<input type="submit" value="save" />
+	</form>
+</div>
 
 <% block('header', '') %>
 <% block('footer', '') %>

@@ -45,6 +45,27 @@ module.exports = (function () {
 				}
 			});
 		},
+		createFindProductByNameView: function(callback) {
+			var db = db_init.connect(products);
+			db.save('_design/findProduct', {
+				byName: {
+					map: function(doc) {
+						if (doc.name) {
+							emit(doc._id, {
+								id: doc._id,
+								name: doc.name,
+								price: doc.price
+							});
+						}
+					}
+				}
+			}, function(err, response) {
+				if (err)
+					callback(err, null);
+				if (response)
+					callback(null, response);
+			});
+		},
 		createAccountsDb: function(callback) {
 			var db = db_init.connect(accounts);
 			db.exists(function(err, exists) {
@@ -112,8 +133,6 @@ module.exports = (function () {
 								roles: doc.roles,
 								location: doc['location'] ? doc['location'] : ''
 							});
-						} else {
-							emit(null);
 						}
 					}
 				}	

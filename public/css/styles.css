@@ -66,9 +66,22 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	width: 250px;
 }
 
+#new-dish-panel {
+	width: 380px;
+	padding: 0;
+}
+
 .common-form fieldset {
 	border-radius:10px;
 	width:50%;
+}
+
+.common-form h3 {
+	font-weight: bold;
+	clear: both;
+	font-size: 16px;
+	font-family: Arial;
+	color:#333;
 }
 
 .common-form input[type=text] {
@@ -78,6 +91,7 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	color:#333;
 	padding:1px;
 	margin:3px;
+	display:block;
 }
 
 .common-form input[type=submit] {
@@ -87,6 +101,18 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	color:#333;
 	padding:5px;
 	margin:3px;
+	display:block;
+	cursor:pointer;
+}
+
+.common-form textarea {
+	display:block;
+	clear:both;
+	padding:1px;
+	margin:3px;
+	font:16px Arial;
+	color:#333;
+	width: 98%;
 }
 
 .common-form label {
@@ -95,6 +121,13 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	float:left;
 	padding:1px;
 	margin:3px;
+}
+
+.clear {
+	clear: both;
+	margin: 0;
+	padding: 0;
+	border: 0;
 }
 
 .entry {
