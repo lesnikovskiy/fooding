@@ -45,18 +45,18 @@ module.exports = (function () {
 				}
 			});
 		},
+		// this will search account by email passed via ?key= parameter
+		// findProduct/byName/?key='%mi%'
 		createFindProductByNameView: function(callback) {
 			var db = db_init.connect(products);
 			db.save('_design/findProduct', {
 				byName: {
 					map: function(doc) {
-						if (doc.name) {
-							emit(doc._id, {
-								id: doc._id,
-								name: doc.name,
-								price: doc.price
-							});
-						}
+						emit(doc.name, {
+							id: doc._id,
+							name: doc.name,
+							price: doc.price
+						});
 					}
 				}
 			}, function(err, response) {
@@ -119,21 +119,19 @@ module.exports = (function () {
 			// getAccount/byEmail/?key=lesnikovski%40gmail.com
 			db.save('_design/getAccount', {
 				byEmail: {
-					map: function(doc) {						
-						if (doc.email) {
-							emit(doc._id, {
-								id: doc._id,
-								rev: doc._rev,
-								firstName: doc.firstName,
-								lastName: doc.lastName,
-								nick: doc.nick,
-								email: doc.email,
-								pass: doc.pass,
-								bio: doc.bio ? doc.bio : '',
-								roles: doc.roles,
-								location: doc['location'] ? doc['location'] : ''
-							});
-						}
+					map: function(doc) {
+						emit(doc.email, {
+							id: doc._id,
+							rev: doc._rev,
+							firstName: doc.firstName,
+							lastName: doc.lastName,
+							nick: doc.nick,
+							email: doc.email,
+							pass: doc.pass,
+							bio: doc.bio ? doc.bio : '',
+							roles: doc.roles,
+							location: doc['location'] ? doc['location'] : ''
+						});
 					}
 				}	
 			}, function(err, res) {

@@ -62,6 +62,13 @@ module.exports = (function() {
 			db.remove(product.id, product.rev, function(err, response) {
 				sendResponse(callback, err, response);
 			});
+		},
+		findByName: function(key, callback) {
+			var key = decodeURIComponent(key);
+			var db = db_init.connect(products);
+			db.view('findProduct/byName', {startkey: key, endkey: key + '\u9999'}, function(err, response) {
+				sendResponse(callback, err, response);
+			});
 		}
 	};
 })();

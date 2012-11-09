@@ -660,6 +660,7 @@ $.Autocompleter.Select = function (options, input, select, config) {
 	}
 	
 	function fillList() {
+		debugger;
 		list.empty();
 		var max = limitNumberOfItems(data.length);
 		for (var i=0; i < max; i++) {

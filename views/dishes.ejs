@@ -3,7 +3,7 @@
 <% stylesheet('/css/jquery.ui.css') %>
 <% script('/scripts/jquery-1.8.2.min.js') %>
 <% script('/scripts/jquery.validate.min.js') %>
-<% script('/scripts/jquery.autocomplete.min.js') %>
+<% script('/scripts/jquery.autocomplete.js') %>
 <% script('/scripts/underscore-min.js') %>
 <% script('/scripts/main.js') %>
 <% script('/scripts/client-dishes.js') %>
@@ -23,7 +23,7 @@
 		<h3>Ingredients</h3>
 		<div id="ingredients">
 			<label for="product">Select product:</label>
-			<input type="text" name="product" value="product" />
+			<input type="text" id="product" name="product" />
 			<div id="product-set"></div>
 		</div>
 
