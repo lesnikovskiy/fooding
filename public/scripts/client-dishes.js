@@ -1,17 +1,14 @@
 $(document).ready(function() {
 	$('#product').autocomplete('/api/products/find', {
-		highlight: false,
-		scroll: true,
-		scrollHeight: 300,
-		selectFirst:false,
+		remoteDataType: 'json',
 		minChars: 1,
-		parse: function(data) {			
-			var names = [];
-			_.map(data, function(val) {
-				names.push({name: val.value.name});
-			});
+		processData: function (data) {
+			var processed = [];
+			for (var i = 0; i < data.length; i++) {
+				processed.push([data[i].value.name]);
+			}
 
-			return names;
+			return processed;
 		}
 	});
 });
