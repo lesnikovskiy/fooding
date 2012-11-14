@@ -66,11 +66,6 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	width: 250px;
 }
 
-#new-dish-panel {
-	width: 380px;
-	padding: 0;
-}
-
 .common-form fieldset {
 	border-radius:10px;
 	width:50%;
@@ -190,6 +185,22 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	cursor: pointer;
 }
 
+#modal-dialog label.errormsg {
+	display: block;
+	padding: 10px 25px;
+	margin: 0 auto;
+	color: Red;
+	font-weight: bold;
+}
+
+#modal-dialog button {
+	clear: both;
+	display: block;
+	margin: 0 auto;
+	width: 100px;
+	cursor: pointer;
+}
+
 #modal-dialog fieldset { border-radius: 10px; }
 
 #modal-dialog label.error {
@@ -228,4 +239,27 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 .dev-views .cl {
 	clear:both;
 	border: 1px solid #333;
+}
+
+#new-dish-panel {
+	width: 500px;
+	padding: 0;
+}
+
+#new-dish-panel #ingredients .search-product label {
+	display: block;
+	float: left;	
+}
+
+#new-dish-panel #ingredients .search-product input[type=text] {
+	display: block;
+	float: left;
+	width: auto;
+}
+
+#new-dish-panel #ingredients .search-product button {
+	display: block;
+	cursor: pointer;
+	float: left;
+	margin: 3px
 }

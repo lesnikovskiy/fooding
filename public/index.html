@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Fooding : dishes</title>	
+	<link rel="stylesheet" type="text/css" href="/css/styles.css">
+	<link rel="stylesheet" type="text/css" href="/css/jquery.ui.css">
+	<link rel="stylesheet" type="text/css" href="/css/jquery.autocomplete.css">
+	<script type="text/javascript" src="/scripts/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="/scripts/jquery.validate.min.js"></script>	
+	<script type="text/javascript" src="/scripts/jquery.autocomplete.js"></script>	
+	<script type="text/javascript" src="/scripts/underscore-min.js"></script>	
+	<script type="text/javascript" src="/scripts/backbone-min.js"></script>	
+	<script type="text/javascript" src="/scripts/main.js"></script>	
+	<script type="text/javascript" src="/scripts/client-dishes.js"></script>
+</head>
+<body>
+	<div class="page">
+		<header>			
+		</header>
+		<nav>
+			<a href="/">Home</a>
+			<a href="/products/list">My Products</a>
+			<a href="/dishes/list">My Dishes</a>
+			<a href="/dev">Development</a>
+			<a href="/logout">Logout</a>
+		</nav>
+		<section>
+			<h1>Fooding : Dishes</h1>
+			<script type="text/template" id="new-dish-template">
+				<form class="common-form" id="new-dish-form">
+					<input type="hidden" id="userid" name="userid" value="<%= userid %>" />
+					
+					<h3>Dish attributes</h3>
+					<label for="title">Name:</label>
+					<input type="text" name="title" id="title" />
+					<label for="description">Description:</label>
+					<textarea id="description" name="description" cols="20" rows="5"></textarea>
+					
+					<h3>Ingredients</h3>
+					<div id="ingredients">
+						<div class="search-product">
+							<label for="product">Select product:</label>
+							<input type="text" id="product" name="product" />
+							<button id="add-product">+</button>
+							<div class="clear"></div>
+						</div>
+						<div id="product-set"></div>
+					</div>
+
+					<h3>Directions</h3>
+					<textarea id="directions" name="directions" cols="20" rows="5"></textarea>
+					<input type="submit" value="save" id="submitDish" />
+				</form>
+			</script>
+			<div id="new-dish-panel"></div>
+
+			<script type="text/template" id="error-template">
+				<label class="errormsg"></label>
+				<button id="closeButton">Close</button>
+			</script>
+			<div id="modal-dialog"></div>
+
+		</section>
+		<footer>
+		</footer>
+	</div>	
+</body>
+</html>
