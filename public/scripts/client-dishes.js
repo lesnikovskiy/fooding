@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var Routes = Backbone.Routes.extend({
+	var Router = Backbone.Router.extend({
 		routes: {
 			'': 'home',
 			'!/': 'home',
@@ -16,6 +16,9 @@ $(document).ready(function() {
 			var dishView = new DishView({model: dishModel}); 
 		}
 	});
+
+	var router = new Router();
+	Backbone.history.start();
 
 	var Error = Backbone.Model.extend({
 		defaults: {
@@ -48,7 +51,7 @@ $(document).ready(function() {
 		},
 		render: function() {
 			var template = _.template($('#menu-blocks-template').html(), {});
-			this.$el.html(template).show();
+			this.$el.html(template);
 		}
 	});
 
@@ -98,6 +101,7 @@ $(document).ready(function() {
 		render: function() {
 			var template = _.template($('#new-dish-template').html(), {userid: '94469d0f810c15d47d62c5d71600105c'});
 			this.$el.html(template);
+			this.$el.show();
 
 			this.$('#product').autocomplete('/api/products/find', {
 				remoteDataType: 'json',
