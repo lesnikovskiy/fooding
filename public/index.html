@@ -26,8 +26,14 @@
 			<a href="/logout">Logout</a>
 		</nav>
 		<section>
-			<h1>Fooding : Dishes</h1>
+			<script type="text/template" id="menu-blocks-template">
+				<h1>Fooding</h1>
+				<a href="/products/list">Products</a>
+				<a href="/index.html">My Dishes</a>
+			</script>
+			<div id="menu-blocks" class="profile-menu-blocks"></div>	
 			<script type="text/template" id="new-dish-template">
+				<h1>Fooding : Dishes</h1>
 				<form class="common-form" id="new-dish-form">
 					<input type="hidden" id="userid" name="userid" value="<%= userid %>" />
 					

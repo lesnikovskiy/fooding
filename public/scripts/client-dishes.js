@@ -1,4 +1,22 @@
 $(document).ready(function() {
+	var Routes = Backbone.Routes.extend({
+		routes: {
+			'': 'home',
+			'!/': 'home',
+			'!/dishes': 'dishes' 
+		},
+		home: function() {
+			$('#menu-blocks').show();
+			$('#new-dish-panel').hide();
+		},
+		dishes: function() {
+			$('#menu-blocks').hide();
+
+			var dishModel = new Dish();
+			var dishView = new DishView({model: dishModel}); 
+		}
+	});
+
 	var Error = Backbone.Model.extend({
 		defaults: {
 			message: 'Error occurred'
@@ -22,6 +40,19 @@ $(document).ready(function() {
 			this.$el.fadeOut();
 		}
 	});
+
+	var MenuBlocksView = Backbone.View.extend({
+		el: $('#menu-blocks'),
+		initialize: function() {
+			this.render();
+		},
+		render: function() {
+			var template = _.template($('#menu-blocks-template').html(), {});
+			this.$el.html(template).show();
+		}
+	});
+
+	new MenuBlocksView();
 
 	var Product = Backbone.Model.extend({
 		url: '/products/byname/',
@@ -102,8 +133,5 @@ $(document).ready(function() {
 				}
 			})
 		}
-	});	
-
-	var dishModel = new Dish();
-	var dishView = new DishView({model: dishModel});
+	});		
 });

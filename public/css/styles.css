@@ -244,6 +244,7 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 #new-dish-panel {
 	width: 500px;
 	padding: 0;
+	display: none;
 }
 
 #new-dish-panel #ingredients .search-product label {
