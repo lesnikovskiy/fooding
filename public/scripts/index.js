@@ -3,17 +3,26 @@ $(document).ready(function() {
 		routes: {
 			'': 'home',
 			'!/': 'home',
-			'!/dishes': 'dishes' 
+			'!/dishes': 'dishes',
+			'!/dev': 'dev'
 		},
 		home: function() {
 			$('#menu-blocks').show();
 			$('#new-dish-panel').hide();
+			$('#dev-views').hide();
 		},
 		dishes: function() {
 			$('#menu-blocks').hide();
+			$('#dev-views').hide();
 
 			var dishModel = new Dish();
 			var dishView = new DishView({model: dishModel}); 
+		},
+		dev: function() {
+			$('#menu-blocks').hide();
+			$('#new-dish-panel').hide();
+
+			var devView = new DevView();
 		}
 	});
 
@@ -42,20 +51,7 @@ $(document).ready(function() {
 		close: function() {
 			this.$el.fadeOut();
 		}
-	});
-
-	var MenuBlocksView = Backbone.View.extend({
-		el: $('#menu-blocks'),
-		initialize: function() {
-			this.render();
-		},
-		render: function() {
-			var template = _.template($('#menu-blocks-template').html(), {});
-			this.$el.html(template);
-		}
-	});
-
-	new MenuBlocksView();
+	});	
 
 	var Product = Backbone.Model.extend({
 		url: '/products/byname/',
@@ -137,5 +133,30 @@ $(document).ready(function() {
 				}
 			})
 		}
-	});		
+	});
+
+	var DevView = Backbone.View.extend({
+		el: $('#dev-views'),
+		initialize: function() {
+			this.render();
+		},
+		render: function() {
+			var template = _.template($('#dev-views-template').html(), {});
+			this.$el.html(template);
+			this.$el.show();
+		}
+	});
+
+	var MenuBlocksView = Backbone.View.extend({
+		el: $('#menu-blocks'),
+		initialize: function() {
+			this.render();
+		},
+		render: function() {
+			var template = _.template($('#menu-blocks-template').html(), {});
+			this.$el.html(template);
+		}
+	});
+
+	new MenuBlocksView();		
 });
