@@ -4,25 +4,26 @@ $(document).ready(function() {
 			'': 'home',
 			'!/': 'home',
 			'!/dishes': 'dishes',
-			'!/dev': 'dev'
+			'!/products': 'products'
 		},
 		home: function() {
 			$('#menu-blocks').show();
+
 			$('#new-dish-panel').hide();
-			$('#dev-views').hide();
+			$('#products').hide();
 		},
 		dishes: function() {
 			$('#menu-blocks').hide();
-			$('#dev-views').hide();
+			$('#products').hide();
 
 			var dishModel = new Dish();
 			var dishView = new DishView({model: dishModel}); 
 		},
-		dev: function() {
+		products: function() {
 			$('#menu-blocks').hide();
 			$('#new-dish-panel').hide();
 
-			var devView = new DevView();
+			var productsView = new ProductsView();
 		}
 	});
 
@@ -54,8 +55,10 @@ $(document).ready(function() {
 	});	
 
 	var Product = Backbone.Model.extend({
-		url: '/products/byname/',
+		url: '/api/product/',
 		defaults: {
+			id: '',
+			rev: '',
 			name: '',
 			price: ''
 		}
@@ -63,6 +66,18 @@ $(document).ready(function() {
 
 	var Products = Backbone.Model.extend({
 		model: Product
+	});
+
+	var ProductsView = Backbone.View.extend({
+		el: $('#products'),
+		url: '/api/product/list/',
+		initialize: function() {
+			this.render();
+		},
+		render: function() {
+			var template = _.template($('#products-template').html(), {});
+			this.$el.html(template).show();
+		}
 	});
 
 	var Dish = Backbone.Model.extend({
@@ -131,19 +146,7 @@ $(document).ready(function() {
 					var errMsg = _.has(err, 'responseText') ? err.responseText : err;
 					new ErrorMessage({model: new Error({message: errMsg})});
 				}
-			})
-		}
-	});
-
-	var DevView = Backbone.View.extend({
-		el: $('#dev-views'),
-		initialize: function() {
-			this.render();
-		},
-		render: function() {
-			var template = _.template($('#dev-views-template').html(), {});
-			this.$el.html(template);
-			this.$el.show();
+			});
 		}
 	});
 

@@ -212,14 +212,13 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	width: 170px;
 }
 
-#dev-views {
-	display: none;
+.dev-views {
 	width: 550px;
 	margin: 0;
 	padding: 0;
 }
 
-#dev-views label {
+.dev-views label {
 	width:300px;
 	display: block;
 	float: left;
@@ -229,7 +228,7 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	text-align: left;
 }
 
-#dev-views input {
+.dev-views input {
 	width: 200px;
 	display: block;
 	float: right;
@@ -237,7 +236,7 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	padding: 0;
 	cursor: pointer;
 }
-#dev-views .cl {
+.dev-views .cl {
 	clear:both;
 	border: 1px solid #333;
 }
@@ -264,4 +263,8 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	cursor: pointer;
 	float: left;
 	margin: 3px
+}
+
+#products {
+	display: none;
 }

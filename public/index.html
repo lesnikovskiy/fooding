@@ -20,18 +20,23 @@
 		</header>
 		<nav>
 			<a href="#!/">Home</a>
-			<a href="/products/list">My Products</a>
+			<a href="#!/products">My Products</a>
 			<a href="#!/dishes">My Dishes</a>
-			<a href="#!/dev">Development</a>
 			<a href="/logout">Logout</a>
 		</nav>
 		<section>
 			<script type="text/template" id="menu-blocks-template">
 				<h1>Fooding</h1>
-				<a id="navigate-products" href="/products/list">Products</a>
+				<a id="navigate-products" href="#!/products">Products</a>
 				<a href="#!/dishes">My Dishes</a>
 			</script>
-			<div id="menu-blocks" class="profile-menu-blocks"></div>	
+			<div id="menu-blocks" class="profile-menu-blocks"></div>
+
+			<script type="text/template" id="products-template">
+				<h1>Products</h1>
+			</script>
+			<div id="products"></div>
+
 			<script type="text/template" id="new-dish-template">
 				<h1>Fooding : Dishes</h1>
 				<form class="common-form" id="new-dish-form">
@@ -60,42 +65,7 @@
 				</form>
 			</script>
 			<div id="new-dish-panel"></div>
-
-			<script type="text/template" id="dev-views-template">
-				<h1>Development & Administration</h1>
-				<form method="post" class="dev-create" action="/api/dev/products/db">
-					<label>Create products database</label>
-					<input type="submit" value="submit" />
-					<div class="cl"></div>
-				</form>
-				<form method="post" class="dev-create" action="/api/dev/products/all">
-					<label>Create products/all view</label>
-					<input type="submit" value="submit" />
-					<div class="cl"></div>
-				</form>
-				<form method="post" class="dev-create" action="/api/dev/products/getByName">
-					<label>Create findProduct/byName view</label>
-					<input type="submit" value="submit" />
-					<div class="cl"></div>
-				</form>
-				<form method="post" class="dev-create" action="/api/dev/accounts/db">
-					<label>Create accounts database</label>
-					<input type="submit" value="submit" />
-					<div class="cl"></div>
-				</form>
-				<form method="post" class="dev-create" action="/api/dev/accounts/all">
-					<label>Create accounts/all view:</label>
-					<input type="submit" value="submit" />
-					<div class="cl"></div>
-				</form>
-				<form method="post" class="dev-create" action="/api/dev/accounts/getByEmail">
-					<label>Create accounts/getByEmail view:</label>
-					<input type="submit" value="submit" />
-					<div class="cl"></div>
-				</form>
-			</script>
-			<div id="dev-views"></div>
-
+			
 			<script type="text/template" id="error-template">
 				<label class="errormsg"></label>
 				<button id="closeButton">Close</button>
