@@ -23,7 +23,7 @@ $(document).ready(function() {
 			$('#menu-blocks').hide();
 			$('#new-dish-panel').hide();
 
-			var productsView = new ProductsView();
+			var productsView = new ProductsView({model: new Products()});
 		}
 	});
 
@@ -52,7 +52,7 @@ $(document).ready(function() {
 		close: function() {
 			this.$el.fadeOut();
 		}
-	});	
+	});		
 
 	var Product = Backbone.Model.extend({
 		url: '/api/product/',
@@ -65,6 +65,7 @@ $(document).ready(function() {
 	});
 
 	var Products = Backbone.Model.extend({
+		url: '/api/products/list/',
 		model: Product
 	});
 
@@ -77,6 +78,20 @@ $(document).ready(function() {
 		render: function() {
 			var template = _.template($('#products-template').html(), {});
 			this.$el.html(template).show();
+
+			this.model.fetch({
+				error: function(model, response) {
+					console.log(response);
+				},
+				success: function(model, response) {
+					_.each(response, function(product) {
+						var container = $('<div />', {'class': 'entry'});
+						$('<p />', {text: 'Name: ' + product.name}).appendTo(container);
+						$('<p />', {text: 'Price: ' + product.price}).appendTo(container);
+						container.appendTo($('#products'));
+					});
+				}
+			});
 		}
 	});
 
