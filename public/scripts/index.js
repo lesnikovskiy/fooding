@@ -23,7 +23,8 @@ $(document).ready(function() {
 			$('#menu-blocks').hide();
 			$('#new-dish-panel').hide();
 
-			var productsView = new ProductsView({model: new Products()});
+			var products = new Products();
+			var productsView = new ProductsView({model: products});
 		}
 	});
 
@@ -84,14 +85,24 @@ $(document).ready(function() {
 					console.log(response);
 				},
 				success: function(model, response) {
-					_.each(response, function(product) {
+					var products = model.toJSON();
+					_.each(products, function(product) {
 						var container = $('<div />', {'class': 'entry'});
 						$('<p />', {text: 'Name: ' + product.name}).appendTo(container);
 						$('<p />', {text: 'Price: ' + product.price}).appendTo(container);
+						$('<input />', {'class': 'edit-button', value: 'edit', type: 'button'}).appendTo(container);
+						$('<input />', {'class': 'remove-button', value: 'remove', type: 'button'}).appendTo(container);
+						$('<div />', {'class': 'clear'}).appendTo(container);
 						container.appendTo($('#products'));
 					});
 				}
 			});
+		},
+		events: {
+			'click input.remove-button': 'remove'
+		},
+		remove: function(data) {
+			console.log(data);
 		}
 	});
 
