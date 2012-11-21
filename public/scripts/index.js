@@ -215,10 +215,13 @@ $(document).ready(function() {
 				pass: $('#pass').val()
 			}, {
 				success: function(model, response) {
-					var model = model.toJSON();
-					if (model.status === 'successfully authenticated') {
+					if (response.status === 'successfully authenticated') {
 						context.$el.hide();
 						new ProductsView({model: new Products()});					
+					}
+					
+					if (_.has(response, 'error') || response.error === 'invalid credentials') {
+						new ErrorMessage({model: new Error({message: 'invalid credentials'})});
 					}
 				}
 			});
