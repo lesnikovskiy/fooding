@@ -71,7 +71,25 @@
 				<button id="closeButton">Close</button>
 			</script>
 			<div id="modal-dialog"></div>
-
+			
+			<script type="text/template" id="login-template">
+				<div class="login">
+					<fieldset>
+						<legend>Enter your credentials</legend>
+						<form id="login-form" method="post" action="/login">
+							<label for="login">Email:</label>
+							<input type="text" name="login" id="login" />
+							<label for="pass">Password:</label>
+							<input type="password" name="pass" id="pass" />
+							<input type="button" value="login" />
+							<a class="register" href="/register">Register</a>
+							<div class="clear"></div>
+						</form>
+					</fieldset>
+				</div>
+			</script>
+			<div id="login-view"></div>
+			
 		</section>
 		<footer>
 		</footer>

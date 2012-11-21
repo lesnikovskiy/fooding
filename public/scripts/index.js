@@ -7,14 +7,16 @@ $(document).ready(function() {
 			'!/products': 'products'
 		},
 		home: function() {
-			$('#menu-blocks').show();
-
 			$('#new-dish-panel').hide();
 			$('#products').hide();
+			$('#login-view').hide();
+			
+			$('#menu-blocks').show();
 		},
 		dishes: function() {
 			$('#menu-blocks').hide();
 			$('#products').hide();
+			$('#login-view').hide();
 
 			var dishModel = new Dish();
 			var dishView = new DishView({model: dishModel}); 
@@ -22,6 +24,7 @@ $(document).ready(function() {
 		products: function() {
 			$('#menu-blocks').hide();
 			$('#new-dish-panel').hide();
+			$('#login-view').hide();
 
 			var products = new Products();
 			var productsView = new ProductsView({model: products});
@@ -77,15 +80,22 @@ $(document).ready(function() {
 			this.render();
 		},
 		render: function() {
+			var context = this;
+		
 			var template = _.template($('#products-template').html(), {});
-			this.$el.html(template).show();
+			context.$el.html(template).show();
 
 			this.model.fetch({
 				error: function(model, response) {
 					console.log(response);
 				},
 				success: function(model, response) {
+					//debugger;
 					var products = model.toJSON();
+					if (_.has(products, 'error') && products.error.toLowerCase() === 'unauthorized') {
+						context.$el.hide();
+						new LoginView();
+					}
 					_.each(products, function(product) {
 						var container = $('<div />', {'class': 'entry'});
 						$('<p />', {text: 'Name: ' + product.name}).appendTo(container);
@@ -171,6 +181,45 @@ $(document).ready(function() {
 				error: function(model, err) {
 					var errMsg = _.has(err, 'responseText') ? err.responseText : err;
 					new ErrorMessage({model: new Error({message: errMsg})});
+				}
+			});
+		}
+	});
+	
+	var Login = Backbone.Model.extend({
+		url: '/api/login/',
+		defaults: {
+			login: '',
+			pass: ''
+		}
+	});
+	
+	var LoginView = Backbone.View.extend({
+		el: $('#login-view'),
+		initialize: function() {
+			this.render()
+		},
+		render: function() {
+			var template = _.template($('#login-template').html());
+			this.$el.html(template).show();
+		},
+		events: {
+			'click input:button': 'login'
+		},
+		login: function() {
+			var context = this;
+			var login = new Login();
+			
+			login.save({
+				login: $('#login').val(),
+				pass: $('#pass').val()
+			}, {
+				success: function(model, response) {
+					var model = model.toJSON();
+					if (model.status === 'successfully authenticated') {
+						context.$el.hide();
+						new ProductsView({model: new Products()});					
+					}
 				}
 			});
 		}

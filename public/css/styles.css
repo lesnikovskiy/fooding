@@ -268,3 +268,90 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 #products {
 	display: none;
 }
+
+#login-view {
+	display:none;
+}
+
+.login {
+	width: 400px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+.login label {
+	display: block;
+	clear: both;
+	width: 100px;
+	float: left;
+	margin: 3px
+}
+
+.login input[type=text], .login input[type=password] {
+	width: 200px;
+	display: block;
+	float: right;
+	margin: 3px
+	font:16px Arial;
+}
+
+.login input[type=button] {
+	cursor: pointer;
+	width: 200px;
+	display:block;
+	clear: both;
+	float: right;
+	margin: 3px;
+	text-align: center;
+}
+
+.login .register {
+	display: block;
+	clear: both;
+	float: right;
+	width: 200px;
+	text-align: center;
+	font: 14px Verdana;
+}
+
+.registration {
+
+}
+
+.registration label {
+	display: block;
+	clear: both;
+	width: 200px;
+	float: left;
+	margin: 3px
+}
+
+.registration input[type=text], .registration input[type=password] {
+	width: 200px;
+	display: block;
+	float: right;
+	margin: 3px
+	font:16px Arial;
+}
+
+.registration textarea {
+	display: block;
+	clear: both;
+	width: 100%;
+}
+
+.registration input[type=submit] {
+	cursor: pointer;
+	width: 200px;
+	display:block;
+	clear: both;
+	float: right;
+	margin: 3px;
+	text-align: center;
+}
+
+.clear {
+	clear: both;
+	margin: 0;
+	padding: 0;
+}
