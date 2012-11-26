@@ -49,6 +49,8 @@ $(document).ready(function() {
 			var template = _.template($('#error-template').html(), {});			
 			this.$el.html(template).center().fadeIn();
 			this.$el.find('.errormsg').html(this.model.get('message'));
+			
+			return this;
 		},
 		events: {
 			'click #closeButton': 'close'
@@ -65,6 +67,30 @@ $(document).ready(function() {
 			rev: '',
 			name: '',
 			price: ''
+		}
+	});
+	
+	var ProductView = Backbone.View.extend({
+		el: $('#product'),
+		initialize: function() {
+			_.bindAll(this);
+		},
+		render: function() {
+			this.$el.show();
+			
+			return this;
+		},
+		addProduct: function(model) {
+			debugger;
+			var template = _.template($('#product-template').html(), {
+				productId: model.get('id'),
+				productRev: model.get('rev'),
+				productName: model.get('name'),
+				productPrice: model.get('price')
+			});			
+			this.$el.append(template);
+			
+			return this;
 		}
 	});
 
@@ -90,28 +116,26 @@ $(document).ready(function() {
 					console.log(response);
 				},
 				success: function(model, response) {
-					//debugger;
 					var products = model.toJSON();
 					if (_.has(products, 'error') && products.error.toLowerCase() === 'unauthorized') {
 						context.$el.hide();
 						new LoginView();
 					}
-					_.each(products, function(product) {
-						var container = $('<div />', {'class': 'entry'});
-						$('<p />', {text: 'Name: ' + product.name}).appendTo(container);
-						$('<p />', {text: 'Price: ' + product.price}).appendTo(container);
-						$('<input />', {'class': 'edit-button', value: 'edit', type: 'button'}).appendTo(container);
-						$('<input />', {'class': 'remove-button', value: 'remove', type: 'button'}).appendTo(container);
-						$('<div />', {'class': 'clear'}).appendTo(container);
-						container.appendTo($('#products'));
+					
+					var productView = new ProductView({model: Product}).render();
+					_.each(products, function(product) {	
+						productView.addProduct(product);
 					});
 				}
 			});
+			
+			return this;
 		},
 		events: {
 			'click input.remove-button': 'remove'
 		},
 		remove: function(data) {
+			debugger;
 			console.log(data);
 		}
 	});
@@ -162,6 +186,8 @@ $(document).ready(function() {
 					return processed;
 				}
 			});
+			
+			return this;
 		},
 		events: {
 			'click #submitDish': 'submitDish'
@@ -202,6 +228,8 @@ $(document).ready(function() {
 		render: function() {
 			var template = _.template($('#login-template').html());
 			this.$el.html(template).show();
+			
+			return this;
 		},
 		events: {
 			'click input:button': 'login'
@@ -236,6 +264,8 @@ $(document).ready(function() {
 		render: function() {
 			var template = _.template($('#menu-blocks-template').html(), {});
 			this.$el.html(template);
+			
+			return this;
 		}
 	});
 

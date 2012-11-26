@@ -36,6 +36,29 @@
 				<h1>Products</h1>
 			</script>
 			<div id="products"></div>
+			
+			<script type="text/template" id="product-template">
+				<div class="entry">
+					<form>
+						<input type="hidden" id="id" value="{productId}" />
+						<input type="hidden" id="rev" value="{productRev}" />
+						<p>
+							<label for="name">Name:</label>
+							<span id="name-text">{product-name}</span>
+							<input type="text" id="name" value="{productName}" class="hidden" />
+						</p>
+						<p>
+							<label for="price">Price:</label>
+							<span id="price-text">{product-price}"</span>
+							<input type="text" id="price" value="{productPrice}" class="hidden" />
+						</p>
+						<input type="button" class="edit-button" value="edit" />
+						<input type="button" class="remove-button" value="remove" />
+						<div class="clear"></div>
+					</form>
+				</div>
+			</script>
+			<div id="product"></div>
 
 			<script type="text/template" id="new-dish-template">
 				<h1>Fooding : Dishes</h1>

@@ -37,6 +37,14 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 	border: 0;
 }
 
+.hidden {
+	display: none;
+}
+
+.block {
+	display: block;
+}
+
 .page nav a:link, a:active, a:visited {
 	display:block;
 	background:Silver;
@@ -267,6 +275,10 @@ html, body, a, p, div, img, span, br, nav, section, aside, footer, header, table
 
 #products {
 	display: none;
+}
+
+#product {
+	display:none;
 }
 
 #login-view {
