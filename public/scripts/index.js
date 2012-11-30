@@ -73,7 +73,7 @@ $(document).ready(function() {
 	var ProductView = Backbone.View.extend({
 		el: $('#product'),
 		initialize: function() {
-			_.bindAll(this);
+			//_.bindAll(this, 'addProduct');
 		},
 		render: function() {
 			this.$el.show();
@@ -81,7 +81,6 @@ $(document).ready(function() {
 			return this;
 		},
 		addProduct: function(model) {
-			debugger;
 			var template = _.template($('#product-template').html(), {
 				productId: model.get('id'),
 				productRev: model.get('rev'),
@@ -91,6 +90,16 @@ $(document).ready(function() {
 			this.$el.append(template);
 			
 			return this;
+		},
+		events: {
+			'click input.edit-button': 'edit',
+			'click input.remove-button': 'remove'
+		},
+		edit: function() {
+			console.log('edit clicked');
+		},
+		remove: function() {
+			console.log('remove clicked');
 		}
 	});
 
@@ -124,7 +133,12 @@ $(document).ready(function() {
 					
 					var productView = new ProductView({model: Product}).render();
 					_.each(products, function(product) {	
-						productView.addProduct(product);
+						productView.addProduct(new Product({
+							id: product.id, 
+							rev: product.rev, 
+							name: product.name, 
+							price: product.price
+						}));
 					});
 				}
 			});

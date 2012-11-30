@@ -40,17 +40,17 @@
 			<script type="text/template" id="product-template">
 				<div class="entry">
 					<form>
-						<input type="hidden" id="id" value="{productId}" />
-						<input type="hidden" id="rev" value="{productRev}" />
+						<input type="hidden" id="id" value="<%= productId %>" />
+						<input type="hidden" id="rev" value="<%= productRev %>" />
 						<p>
 							<label for="name">Name:</label>
-							<span id="name-text">{product-name}</span>
-							<input type="text" id="name" value="{productName}" class="hidden" />
+							<span id="name-text"><%= productName %></span>
+							<input type="text" value="<%= productName %>" class="hidden" />
 						</p>
 						<p>
 							<label for="price">Price:</label>
-							<span id="price-text">{product-price}"</span>
-							<input type="text" id="price" value="{productPrice}" class="hidden" />
+							<span id="price-text"><%= productPrice %></span>
+							<input type="text" value="<%= productPrice %>" class="hidden" />
 						</p>
 						<input type="button" class="edit-button" value="edit" />
 						<input type="button" class="remove-button" value="remove" />
