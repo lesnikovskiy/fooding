@@ -77,19 +77,13 @@
           <li>Google Chrome 6</li>
           <li>Safari 4</li>
         </ul>
-        <form>
-          <div>
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title">
-          </div>
-          <p>Enter note:</p>
-          <p>
-            <textarea id="title" name="title" rows="10" cols="50"></textarea>
-          </p>
-          <p>
-            <button type="submit">save</button>
-          </p>
-        </form>
+		<div data-bind="foreach: notes">
+			<h2 data-bind="text: title"></h2>
+			<p data-bind="text: body"></p>
+		</div data-bind="with: note">
+			<p><input type="text" id="title" placeholder="Title" data-bind="value: title" /></p>
+			<p><input type="text" id="body" placeholder="note body" data-bind="value: body" /></p>
+			<p><button data-bind="click: addNote">add</button>
       </div>
     </div>
     <div id="footer">

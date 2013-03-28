@@ -4,6 +4,7 @@ var db_init = require('./db_init');
 module.exports = (function () {
 	var products = 'products';
 	var accounts = 'accounts';
+	var notes = 'notes';
 
 	return {
 		createProductsDb: function(callback) {
@@ -142,6 +143,23 @@ module.exports = (function () {
 				if (res) {
 					callback(null, res);
 				}
+			});
+		},
+		createNotesView: function(callback) {
+			var db = db_init.connect(notes);
+			db.save('_design/notes', {
+				all: {
+					map: function(doc) {
+						if (doc.title && doc.body) {
+							emit(doc._id, {id: doc._id, rev: doc._rev, title: doc.title, body: doc.body});
+						}
+					}
+				}
+			}, function(err, response) {
+				if (err)
+					callback(err, null);
+				if (response)
+					callback(null, response);
 			});
 		}
 	};	
