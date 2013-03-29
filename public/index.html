@@ -81,9 +81,11 @@
 			<h2 data-bind="text: title"></h2>
 			<p data-bind="text: body"></p>
 		</div data-bind="with: note">
-			<p><input type="text" id="title" placeholder="Title" data-bind="value: title" /></p>
-			<p><input type="text" id="body" placeholder="note body" data-bind="value: body" /></p>
-			<p><button data-bind="click: addNote">add</button>
+		<form data-bind="submit: $root.addNote">
+			<p><input type="text" id="title" placeholder="Title" data-bind="value: titleText" /></p>
+			<p><input type="text" id="body" placeholder="Note body" data-bind="value: bodyText" /></p>
+			<p><button type="submit">add note</button>
+		</form>
       </div>
     </div>
     <div id="footer">

@@ -19,9 +19,9 @@ module.exports = (function() {
 				writeResponse(callback, err, response);
 			});
 		},
-		add: function(product, callback) {
+		add: function(note, callback) {
 			var db = db_init.connect(notes);
-			db.save(product, function (err, response) {
+			db.save(note, function (err, response) {
 				writeResponse(callback, err, response);
 			});
 		}
