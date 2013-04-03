@@ -5,11 +5,20 @@ window.myApp = {};
 (function (myApp) {
 	function Product() {
 		var self = this;
+
 		self.sku = ko.observable('');
 		self.description = ko.observable('');
 		self.price = ko.observable(0.00);
 		self.cost = ko.observable(0.00);
 		self.quantity = ko.observable(0);
+
+		// computed observables
+		self.skuAndDescription = ko.computed(function () {
+			var sku = self.sku() || '';
+			var description = self.description() || '';
+
+			return sku + ': ' + description;
+		});
 	}
 	
 	myApp.Product = Product;
@@ -19,12 +28,22 @@ window.myApp = {};
 (function(myApp) {
 	function ProductsViewModel() {
 		var self = this;
+
 		self.selectedProduct = ko.observable();
 		self.productCollection = ko.observableArray([]);
+		self.listViewSelectedItem = ko.observable(null);
+
+		// push any changes in the list view to our main selectedProduct
+		self.listViewSelectedItem.subscribe(function (product) {
+			if (product)
+				self.selectedProduct(product);
+		});
+
 		self.addNewProduct = function() {
 			var p = new myApp.Product();
 			self.selectedProduct(p);
 		};
+
 		self.doneEditingProduct = function() {
 			var p = new self.selectedProduct();
 			
@@ -40,6 +59,7 @@ window.myApp = {};
 			// clear out the selected product
 			self.selectedProduct(null);
 		};
+
 		self.removeProduct = function() {
 			var p = self.selectedProduct();
 			
@@ -53,4 +73,16 @@ window.myApp = {};
 	}
 	
 	myApp.ProductsViewModel = ProductsViewModel;
+})(window.myApp);
+
+(function (myApp) {
+	function App() {
+		this.run = function () {
+			var vm = new myApp.ProductsViewModel();
+			ko.applyBindings(vm);
+		}
+	}
+
+	// make sure it's public
+	myApp.App = App;
 })(window.myApp);

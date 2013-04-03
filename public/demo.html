@@ -6,7 +6,7 @@
 	<style type="text/css">
 	#content { width: 800px; margin: 0 auto; }
 	#content form { width: 500px; }
-	#content form label { display:block; clear:both; width: 250px; }
+	#content form label { display:block; clear:both; width: 290px; }
 	#content form fieldset { border-radius:5px; }
 	#content form input[type=text] { float: right; }
 	</style>
@@ -14,44 +14,44 @@
 <body>
 	<div id="content">
 		<div id="productView" data-bind="with: selectedProduct">
-			<p>
-				SKU: <span data-bind="text: sku"></span>
-			</p>
-			<p>
-				Description: <span data-bind="text: description"></span>
-			</p>
-			<p>
-				Cost: <span data-bind="text: cost"></span>
-			</p>
-			<p>
-				Price: <span data-bind="text: price"></span>
-			</p>
-			<p>
-				Quantity: <span data-bind="text: quantity"></span>
-			</p>
+			<form>
+				<fieldset>
+					<legend>Product Details</legend>
+					<label for="sku">SKU:
+						<input id="sku" type="text" data-bind="value: sku" /></label>
+					<label for="description">Description:
+						<input id="description" type="text" data-bind="value: description" /></label>
+					<label for="cost">Cost:
+						<input id="cost" type="text" data-bind="value: cost" /></label>
+					<label for="price">Price:
+						<input id="price" type="text" data-bind="value: price" /></label>
+					<label for="quantity">Quantity:
+						<input id="quantity" type="text" data-bind="value: quantity" /></label>
+				</fieldset>
+			</form>
 		</div>
-		<form>
-			<fieldset>
-				<legend>Product Details</legend>
-				<label for="sku">SKU:
-					<input id="sku" type="text" data-bind="text: sku" /></label>
-				<label for="description">Description:
-					<input id="description" type="text" data-bind="text: description" /></label>
-				<label for="cost">Cost:
-					<input id="cost" type="text" data-bind="text: cost" /></label>
-				<label for="price">Price:
-					<input id="price" type="text" data-bind="text: price" /></label>
-				<label for="quantity">Quantity:
-					<input id="quantity" type="text" data-bind="text: quantity" /></label>
-			</fieldset>
-		</form>
+		
 		<div id="buttonContainer">
-			<button type="button" data-bind="click: addNewProduct, visible: !selectedProduct()">Add</button>
-			<button type="button" data-bind="click: removeProduct, visible: selectedProduct()">Remove</button>
-			<button type="button" data-bind="click: doneEditingProduct, visible: selectedProduct()">Done</button>
-		</div>		
+			<button type="button" data-bind="click: addNewProduct, visible: (selectedProduct() ? false : true)">
+				Add</button>
+			<button type="button" data-bind="click: removeProduct, visible: (selectedProduct() ? true : false)">
+				Remove</button>
+			<button type="button" data-bind="click: doneEditingProduct, visible: (selectedProduct() ? true : false)">
+				Done</button>
+		</div>	
+
+		<div id="productListView">
+			<select id="productList" size="10" 
+				style="min-width:120px;" 
+				data-bind="options: productCollection, value: listViewSelectedItem, optionsText: 'skuAndDescription'">
+			</select>
+		</div>	
 	</div>
 	<script type="text/javascript" src="/scripts/knockout-2.1.0.debug.js"></script>
 	<script type="text/javascript" src="/scripts/demoapp.js"></script>
+	<script type="text/javascript">
+		var app = new myApp.App();
+		app.run();
+	</script>
 </body>
 </html>
