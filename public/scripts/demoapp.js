@@ -25,7 +25,31 @@ window.myApp = {};
 			var p = new myApp.Product();
 			self.selectedProduct(p);
 		};
-		
+		self.doneEditingProduct = function() {
+			var p = new self.selectedProduct();
+			
+			if (!p)
+				return;
+				
+			// check if already in collection
+			if (self.productCollection.indexOf(p) > -1) 
+				return;
+				
+			self.productCollection.push(p);
+			
+			// clear out the selected product
+			self.selectedProduct(null);
+		};
+		self.removeProduct = function() {
+			var p = self.selectedProduct();
+			
+			if (!p)
+				return;
+				
+			self.selectedProduct(null);
+			
+			return self.productCollection.remove(p);
+		};
 	}
 	
 	myApp.ProductsViewModel = ProductsViewModel;

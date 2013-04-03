@@ -3,10 +3,17 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Knockout Starter Guide</title>	
+	<style type="text/css">
+	#content { width: 800px; margin: 0 auto; }
+	#content form { width: 500px; }
+	#content form label { display:block; clear:both; width: 250px; }
+	#content form fieldset { border-radius:5px; }
+	#content form input[type=text] { float: right; }
+	</style>
 </head>
 <body>
 	<div id="content">
-		<div id="productView">
+		<div id="productView" data-bind="with: selectedProduct">
 			<p>
 				SKU: <span data-bind="text: sku"></span>
 			</p>
@@ -23,6 +30,26 @@
 				Quantity: <span data-bind="text: quantity"></span>
 			</p>
 		</div>
+		<form>
+			<fieldset>
+				<legend>Product Details</legend>
+				<label for="sku">SKU:
+					<input id="sku" type="text" data-bind="text: sku" /></label>
+				<label for="description">Description:
+					<input id="description" type="text" data-bind="text: description" /></label>
+				<label for="cost">Cost:
+					<input id="cost" type="text" data-bind="text: cost" /></label>
+				<label for="price">Price:
+					<input id="price" type="text" data-bind="text: price" /></label>
+				<label for="quantity">Quantity:
+					<input id="quantity" type="text" data-bind="text: quantity" /></label>
+			</fieldset>
+		</form>
+		<div id="buttonContainer">
+			<button type="button" data-bind="click: addNewProduct, visible: !selectedProduct()">Add</button>
+			<button type="button" data-bind="click: removeProduct, visible: selectedProduct()">Remove</button>
+			<button type="button" data-bind="click: doneEditingProduct, visible: selectedProduct()">Done</button>
+		</div>		
 	</div>
 	<script type="text/javascript" src="/scripts/knockout-2.1.0.debug.js"></script>
 	<script type="text/javascript" src="/scripts/demoapp.js"></script>
