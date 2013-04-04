@@ -24,6 +24,20 @@ module.exports = (function() {
 			db.save(note, function (err, response) {
 				writeResponse(callback, err, response);
 			});
+		},
+		remove: function(note, callback) {
+			var db = db_init.connect(notes);
+			
+			if (!note.id && !note.rev) {
+				writeResponse(callback, {
+					error: 'Unable to remove note',
+					reason: '_rev and _id must be provided'
+				}, null);
+			}
+			
+			db.remove(note.id, note.rev, function(err, response) {
+				writeResponse(callback, err, response);
+			});
 		}
 	}
 })();

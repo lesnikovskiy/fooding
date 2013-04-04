@@ -80,11 +80,14 @@
 		<div data-bind="foreach: notes">
 			<h2 data-bind="text: title"></h2>
 			<p data-bind="text: body"></p>
-		</div data-bind="with: note">
-		<form data-bind="submit: $root.addNote">
-			<p><input type="text" id="title" placeholder="Title" data-bind="value: titleText" /></p>
-			<p><input type="text" id="body" placeholder="Note body" data-bind="value: bodyText" /></p>
-			<p><button type="submit">add note</button>
+			<p>
+				<a href="javascript:void(0);" data-bind="click: $root.removeNote">remove</a>
+			</p>
+		</div>
+		<form data-bind="submit: addNote">
+			<p><input type="text" id="title" placeholder="Enter Title" data-bind="value: titleText" /></p>
+			<p><textarea name="body" id="body" placeholder="Enter note content" cols="45" rows="5" data-bind="value: bodyText"></textarea></p>
+			<p><button type="submit">add note</button></p>
 		</form>
       </div>
     </div>
