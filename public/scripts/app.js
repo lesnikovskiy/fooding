@@ -25,9 +25,7 @@
 					type: 'POST',
 					url: '/api/notes',
 					data: ko.toJS(note),
-					success: function(data) {
-						console.log(data);
-						
+					success: function(data) {						
 						note.id(data.response.id);
 						note.rev(data.response.rev);
 						self.notes.push(note);
@@ -54,7 +52,8 @@
 				self.titleText('');
 				self.bodyText('');
 			};
-
+			
+			$.ajaxSetup({ cache: false });
 			$.getJSON('/api/notes', function(data) {
 				var mappedNotes = $.map(data.notes, function(i) {
 					return new Note(i, true);
