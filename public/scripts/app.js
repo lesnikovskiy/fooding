@@ -1,8 +1,12 @@
 (function($) {
 	$(document).ready(function() {
-		/* Todo: invent something to migrate/create views
+		/* Todo: invent something to migrate/create views */
+		/*
 		$.post('/api/dev/notes/getnotesview', function(data) {
-			alert(data);
+			if (data.response && data.response.ok)
+				alert('Notes View created successfully');
+			else
+				alert('Shit happens');
 		});*/
 		function Note(note, isSync) {			
 			this.id = ko.observable(note.id);
