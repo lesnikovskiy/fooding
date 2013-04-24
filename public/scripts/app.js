@@ -8,6 +8,15 @@
 			else
 				alert('Shit happens');
 		});*/
+		/* Create coords view for map database
+		$.post('/api/dev/map/createcoordsview', function(data) {
+			if (data.response && data.response.ok)
+				alert('Notes View created successfully');
+			else
+				alert('Shit happens');
+		});
+		*/		
+		
 		function Note(note, isSync) {			
 			this.id = ko.observable(note.id);
 			this.rev = ko.observable(note.rev);

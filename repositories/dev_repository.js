@@ -5,6 +5,7 @@ module.exports = (function () {
 	var products = 'products';
 	var accounts = 'accounts';
 	var notes = 'notes';
+	var map = 'map';
 
 	return {
 		createProductsDb: function(callback) {
@@ -156,6 +157,22 @@ module.exports = (function () {
 					}
 				}
 			}, function(err, response) {
+				if (err)
+					callback(err, null);
+				if (response)
+					callback(null, response);
+			});
+		},
+		createMapView: function(callback) {
+			var db = db_init.connect(map);
+			db.save('_design/coords', {
+				all: {
+					map: function(doc) {
+						id (doc.lat && doc.lng && doc.title) 
+							emit(doc._id, {id: doc._id, rev: doc._rev, title: doc.title, desc: doc.desc, lat: doc.lat, lng: doc.lng});
+					}
+				}
+			}, function (err, response) {
 				if (err)
 					callback(err, null);
 				if (response)
