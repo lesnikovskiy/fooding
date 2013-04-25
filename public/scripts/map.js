@@ -31,6 +31,21 @@
 			return this;
 		}
 		
+		elem.encodeText = function(txt) {
+			var textarea = document.createElement('textarea');
+			textarea.innerHTML = txt;			
+			elem.appendChild(document.createTextNode(textarea.innerHTML));
+			
+			return this;
+		};
+		
+		elem.decodeText = function(txt) {
+			var textarea = document.createElement('textarea');
+			textarea.innerHTML = txt;
+			elem.appendChild(document.createTextNode(textarea.value));
+			return this;
+		};
+		
 		elem.append = function(what) {
 			(elem || document).appendChild(what);			
 			return this;
