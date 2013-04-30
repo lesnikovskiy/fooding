@@ -1,5 +1,5 @@
-(function() {
-	var map;
+(function(self) {
+	self.map;
 	var initLatCoord = 50.450946269314805;
 	var initLngCoord = 30.598297119140625;
 	var initZoom = 12;
@@ -64,20 +64,34 @@
 		return elem;
 	};
 	
+	self.pushMarkerToMap = function(coord) {
+		var title = $el('p').text('Title: ').text(coord.title);
+		var desc = $el('p').text('Description: ').text(coord.desc);
+		var div = $el('div').append(title).append(desc);
+		
+		self.map.addOverlay(createMarker(new GLatLng(parseFloat(coord.lat), parseFloat(coord.lng)), div));
+		self.map.closeInfoWindow();
+	};
+	
 	var submitMarker = function() {
+		var markerData = {
+			lat: $('#lat').val(),
+			lng: $('#lng').val(),
+			title: $('#title').val(),
+			desc: $('#desc').val()
+		};
+	
 		$.ajax({
 			type: 'POST',
 			contentType: 'application/json',
 			url: '/api/map', 
 			dataType: 'json',
-			data: JSON.stringify({
-				lat: $('#lat').val(),
-				lng: $('#lng').val(),
-				title: $('#title').val(),
-				desc: $('#desc').val()
-			}),
+			data: JSON.stringify(markerData),
 			success: function (data) {
-				console.log(data);
+				var json = $.parseJSON(data) || data;
+				if (json.response && json.response.ok) {
+					self.pushMarkerToMap(markerData);
+				}
 			}
 		});
 	
@@ -121,34 +135,27 @@
 			return;		
 		};		
 		
-		var map = new GMap(document.getElementById('map'));
-		map.addControl(new GSmallMapControl());
-		map.addControl(new GMapTypeControl());
-		map.setCenter(new GLatLng(initLatCoord, initLngCoord), initZoom);
+		self.map = new GMap(document.getElementById('map'));
+		self.map.addControl(new GSmallMapControl());
+		self.map.addControl(new GMapTypeControl());
+		self.map.setCenter(new GLatLng(initLatCoord, initLngCoord), initZoom);
 		
 		GEvent.addListener(map, 'click', function(overlay, latlng) {
 			if (latlng) {
 				map.openInfoWindow(latlng, createMarkerForm(latlng.lat(), latlng.lng()));
 				var form = document.getElementById('marker-form');
 			}
-		});
+		});		
 		
-		var pushMarkerToMap = function(coord) {
-			var title = $el('p').text('Title: ').text(coord.title);
-			var desc = $el('p').text('Description: ').text(coord.desc);
-			var div = $el('div').append(title).append(desc);
-			
-			map.addOverlay(createMarker(new GLatLng(parseFloat(coord.lat), parseFloat(coord.lng)), div));
-			map.closeInfoWindow();
-		};
-		
-		$ajax({
+		$.ajax({
 			type: 'GET',
-			contentType: 'application/json',
 			url: '/api/map',
-			dataType: 'json',
+			cache: false,
 			success: function (data) {
-				console.log(data);
+				var json = $.parseJSON(data) || data;			
+				for (var i = 0; i < json.coords.length; i++) {
+					self.pushMarkerToMap(json.coords[i]);
+				}
 			}
 		});
 	};
