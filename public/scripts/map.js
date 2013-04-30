@@ -86,9 +86,9 @@
 			return this;
 		};
 		
-		elem.addEvent = function(type, handler) {
+		elem.on = function(type, handler) {
 			if (!handler.$$guid)
-				handler.$$guid = elem.addEvent.guid++;
+				handler.$$guid = elem.on.guid++;
 				
 			if (!elem.events)
 				elem.events = {};
@@ -116,7 +116,7 @@
 			return this;
 		};
 		
-		elem.addEvent.guid = 1;
+		elem.on.guid = 1;
 		
 		return elem;
 	};
@@ -174,7 +174,7 @@
 		var submit = $el('input').attr({type: 'submit', value: 'submit', id: 'submit-marker'});
 		
 		var form = $el('form').attr({method: 'post', action: '/api/map', id: 'marker-form'})
-						.addEvent('submit', submitMarker)
+						.on('submit', submitMarker)
 						.append(hiddenLat)
 						.append(hiddenLng)
 						.append(label)
