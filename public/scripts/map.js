@@ -7,7 +7,37 @@
 	$el = function (el) {
 		var elem = document.createElement(el);
 		
-		elem.setid = function(id) {
+		function _handleEvent(e) {
+			var returnValue = true;
+			
+			e = e || _fixEvent(window.event);
+			var handlers = elem.events[e.type];
+			
+			for (var i in handlers) {
+				this.$$handleEvent = handlers[i];
+				if (this.$$handleEvent(e) === false)
+					returnValue = false;
+			}
+			
+			return returnValue;
+		}
+		
+		function _fixEvent(e) {
+			e.preventDefault = _fixEvent.preventDefault;
+			e.stopPropagation = _fixEvent.stopPropagation;
+			
+			return e;
+		}
+		
+		_fixEvent.preventDefault = function() {
+			this.returnValue = false;
+		};
+		
+		_fixEvent.stopPropagation = function() {
+			this.cancelBubble = true;
+		};
+		
+		elem.setId = function(id) {
 			elem.id = id;
 			return this;
 		};
@@ -56,10 +86,37 @@
 			return this;
 		};
 		
-		elem.addEvent = function(event, callback) {
-			elem['on' + event] = callback;
+		elem.addEvent = function(type, handler) {
+			if (!handler.$$guid)
+				handler.$$guid = elem.addEvent.guid++;
+				
+			if (!elem.events)
+				elem.events = {};
+				
+			var handlers = elem.events[type];
+			if (!handlers) {
+				handlers = elem.events[type] = {};
+				
+				if (elem['on' + type]) {
+					handlers[0] = elem['on' + type];
+				}
+			}
+			
+			handlers[handler.$$guid] = handler;
+			elem['on' + type] = _handleEvent;			
+			
 			return this;
-		}
+		};
+		
+		elem.removeEvent = function(type, handler) {
+			if (elem.events && elem.events[type]) {
+				delete elem.events[type][handler.$$guid];
+			}
+		
+			return this;
+		};
+		
+		elem.addEvent.guid = 1;
 		
 		return elem;
 	};
@@ -113,7 +170,7 @@
 		var label = $el('label').attr({htmlFor: 'title'}).text('Title:');			
 		var title = $el('input').attr({type: 'text', id: 'title'});			
 		var descLabel = $el('label').attr({htmlFor: 'desc'}).text('Description:');			
-		var textarea = $el('textarea').setid('desc');			
+		var textarea = $el('textarea').setId('desc');			
 		var submit = $el('input').attr({type: 'submit', value: 'submit', id: 'submit-marker'});
 		
 		var form = $el('form').attr({method: 'post', action: '/api/map', id: 'marker-form'})
