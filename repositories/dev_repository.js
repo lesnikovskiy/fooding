@@ -168,7 +168,7 @@ module.exports = (function () {
 			db.save('_design/coords', {
 				all: {
 					map: function(doc) {
-						id (doc.lat && doc.lng && doc.title) 
+						if (doc.lat && doc.lng && doc.title) 
 							emit(doc._id, {id: doc._id, rev: doc._rev, title: doc.title, desc: doc.desc, lat: doc.lat, lng: doc.lng});
 					}
 				}
