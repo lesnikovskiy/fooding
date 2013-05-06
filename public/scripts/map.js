@@ -118,6 +118,20 @@
 		
 		elem.on.guid = 1;
 		
+		elem.serialize = function() {
+			var self = this;
+			
+			if (!self.elements && self.elements.length == 0)
+				return '';
+				
+			var elems = [];
+			for (var i = 0; i < self.elements.length; i++) {
+				elems.push(self.elements[i].name + '=' + encodeURIComponent(self.elements[i].value));
+			}
+			
+			return elems.join('&');
+		};
+		
 		return elem;
 	};
 	
@@ -218,19 +232,21 @@
 	};
 	
 	var submitMarker = function() {
-		var markerData = {
-			lat: $('#lat').val(),
-			lng: $('#lng').val(),
-			title: $('#title').val(),
-			desc: $('#desc').val()
-		};
+		var ctx = this;
 		
+		var markerData = {
+			lat: document.getElementById('lat').value,
+			lng: document.getElementById('lng').value,
+			title: document.getElementById('title').value,
+			desc: document.getElementById('desc').value
+		};
+				
 		$ajax({
-			type: 'POST',
-			url: '/api/map',
-			data: JSON.stringify(markerData),			
+			type: ctx.method,
+			url: ctx.action,
+			data: ctx.serialize(),			
 			success: function (data) {
-				var json = $.parseJSON(data) || data;
+				var json = JSON.parse(data) || data;
 				if (json.response && json.response.ok) {
 					self.pushMarkerToMap(markerData);
 				}
@@ -253,13 +269,13 @@
 	};	
 	
 	var createMarkerForm = function(lat, lng) {
-		var hiddenLat = $el('input').attr({value: lat, type: 'hidden', id: 'lat'});		
-		var hiddenLng = $el('input').attr({value: lng, type: 'hidden', id: 'lng'});
+		var hiddenLat = $el('input').attr({value: lat, type: 'hidden', id: 'lat', name: 'lat'});		
+		var hiddenLng = $el('input').attr({value: lng, type: 'hidden', id: 'lng', name: 'lng'});
 		var label = $el('label').attr({htmlFor: 'title'}).text('Title:');			
-		var title = $el('input').attr({type: 'text', id: 'title'});			
+		var title = $el('input').attr({type: 'text', id: 'title', name: 'title'});			
 		var descLabel = $el('label').attr({htmlFor: 'desc'}).text('Description:');			
-		var textarea = $el('textarea').setId('desc');			
-		var submit = $el('input').attr({type: 'submit', value: 'submit', id: 'submit-marker'});
+		var textarea = $el('textarea').attr({id: 'desc', name: 'desc'});			
+		var submit = $el('input').attr({type: 'submit', value: 'submit', id: 'submit-marker', name: 'submit-button'});
 		
 		var form = $el('form').attr({method: 'post', action: '/api/map', id: 'marker-form'})
 						.on('submit', submitMarker)
@@ -306,7 +322,7 @@
 			url: '/api/map',
 			cache: false,
 			success: function (data) {
-				var json = $.parseJSON(data) || data;
+				var json = JSON.parse(data) || data;
 				for (var i = 0; i < json.coords.length; i++) {
 					self.pushMarkerToMap(json.coords[i]);
 				}
