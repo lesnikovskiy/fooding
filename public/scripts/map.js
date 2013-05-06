@@ -4,7 +4,7 @@
 	var initLngCoord = 30.598297119140625;
 	var initZoom = 12;
 	
-	$el = function (el) {
+	$el = function (el) {	
 		var elem = document.createElement(el);
 		
 		function _handleEvent(e) {
@@ -121,7 +121,7 @@
 		return elem;
 	};
 	
-	$ajax(options) {
+	var $ajax = function (options) {
 		options = {
 			type: options.type || 'POST',
 			url: options.url || '',
@@ -130,8 +130,18 @@
 			error: options.error || function() {},
 			success: options.success || function() {},
 			progress: options.progress || function() {},
+			cache: typeof options.cache != 'undefined' ? options.cache : true,
+			contentType: options.contentType || options.type.toUpperCase() === 'POST' 
+													? 'application/x-www-form-urlencoded' 
+													: 'text/html; charset=UTF-8',
 			data: options.data || ''
-		};
+		};		
+
+		if (!options.cache) {			
+			options.url = options.url.indexOf('?') >= 0 
+				? options.url + '&' + (new Date()).getTime()
+				: options.url + '?' + (new Date()).getTime()
+		}
 		
 		if (typeof XMLHttpRequest == 'undefined') {
 			XMLHttpRequest = function() {
@@ -142,7 +152,7 @@
 			};
 		}
 		
-		var xml = new XMLHttpRequest();
+		var xml = new XMLHttpRequest();	
 		
 		xml.open(options.type, options.url, true);
 		
@@ -154,12 +164,30 @@
 		}, timeoutLength);
 		
 		xml.onreadystatechange = function() {
-			if (xml.readState == 4 && !requestDone) {
+			if (xml.readyState == 4 && !requestDone) {
 				if (isHTTPSuccess(xml)) {
-					options.success(httpData(xml, options.type));
+					options.success(handleData(xml));
+				} else {
+					options.error();
 				}
+				
+				options.complete();
+				
+				xhr = null;
 			}
-		};
+		};		
+		
+		if (!options.cache) {
+			xml.setRequestHeader('Cache-Control', 'no-cache, no-store');
+		}
+		
+		if (options.contentType)
+			xml.setRequestHeader('Content-Type', options.contentType);
+		
+		if (xml.overrideMimeType)
+			xml.setRequestHeader('Connection', 'close');
+		
+		xml.send(options.data);
 		
 		function isHTTPSuccess(r) {
 			try {
@@ -172,7 +200,13 @@
 			
 			return false;
 		}
-	}	
+		
+		function handleData(r) {
+			var ct = r.getResponseHeader('content-type');
+			
+			return !ct || ct.indexOf('xml') == -1 ? r.responseText : r.responseXML;
+		}
+	};	
 	
 	self.pushMarkerToMap = function(coord) {
 		var title = $el('p').text('Title: ').text(coord.title);
@@ -190,18 +224,19 @@
 			title: $('#title').val(),
 			desc: $('#desc').val()
 		};
-	
-		$.ajax({
+		
+		$ajax({
 			type: 'POST',
-			contentType: 'application/json',
-			url: '/api/map', 
-			dataType: 'json',
-			data: JSON.stringify(markerData),
+			url: '/api/map',
+			data: JSON.stringify(markerData),			
 			success: function (data) {
 				var json = $.parseJSON(data) || data;
 				if (json.response && json.response.ok) {
 					self.pushMarkerToMap(markerData);
 				}
+			},
+			error: function () {
+				console.log(arguments);
 			}
 		});
 	
@@ -266,12 +301,12 @@
 			}
 		});		
 		
-		$.ajax({
+		$ajax({
 			type: 'GET',
 			url: '/api/map',
 			cache: false,
 			success: function (data) {
-				var json = $.parseJSON(data) || data;			
+				var json = $.parseJSON(data) || data;
 				for (var i = 0; i < json.coords.length; i++) {
 					self.pushMarkerToMap(json.coords[i]);
 				}
