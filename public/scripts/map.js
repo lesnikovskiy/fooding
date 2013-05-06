@@ -121,6 +121,59 @@
 		return elem;
 	};
 	
+	$ajax(options) {
+		options = {
+			type: options.type || 'POST',
+			url: options.url || '',
+			timeout: options.timeout || 5000,
+			complete: options.complete || function() {},
+			error: options.error || function() {},
+			success: options.success || function() {},
+			progress: options.progress || function() {},
+			data: options.data || ''
+		};
+		
+		if (typeof XMLHttpRequest == 'undefined') {
+			XMLHttpRequest = function() {
+				return new ActiveXObject(
+					navigator.userAgent.indexOf('MSIE 5') >= 0
+						? "Microsoft.XMLHTTP" : "Msxml2.XMLHTTP"
+				);
+			};
+		}
+		
+		var xml = new XMLHttpRequest();
+		
+		xml.open(options.type, options.url, true);
+		
+		var timeoutLength = options.timeout;
+		var requestDone = false;
+		
+		setTimeout(function() {
+			requestDone = true;
+		}, timeoutLength);
+		
+		xml.onreadystatechange = function() {
+			if (xml.readState == 4 && !requestDone) {
+				if (isHTTPSuccess(xml)) {
+					options.success(httpData(xml, options.type));
+				}
+			}
+		};
+		
+		function isHTTPSuccess(r) {
+			try {
+				return !r.status && location.protocol == 'file:' || 
+					(r.status >= 200 && r.status < 300) ||
+					r.status == 304 ||
+					navigator.userAgent.indexOf('Safari') >= 0
+						&& typeof r.status == 'undefined'
+			} catch (e) {}
+			
+			return false;
+		}
+	}	
+	
 	self.pushMarkerToMap = function(coord) {
 		var title = $el('p').text('Title: ').text(coord.title);
 		var desc = $el('p').text('Description: ').text(coord.desc);
@@ -196,6 +249,15 @@
 		self.map.addControl(new GSmallMapControl());
 		self.map.addControl(new GMapTypeControl());
 		self.map.setCenter(new GLatLng(initLatCoord, initLngCoord), initZoom);
+		
+		GEvent.addListener(map, 'singlerightclick', function(point, elem, overlay) {
+			console.log(point);
+			console.log(elem);
+			console.log(overlay);
+			if (point) {
+				
+			}
+		});
 		
 		GEvent.addListener(map, 'click', function(overlay, latlng) {
 			if (latlng) {

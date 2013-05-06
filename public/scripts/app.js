@@ -8,7 +8,7 @@
 			else
 				alert('Shit happens');
 		});*/
-		/* Create coords view for map database
+		/* Create coords view for map databases
 		$.post('/api/dev/map/createcoordsview', function(data) {
 			if (data.response && data.response.ok)
 				alert('Map View created successfully');
