@@ -39,19 +39,32 @@
 			requestDone = true;
 		}, timeoutLength);
 		
-		xml.onreadystatechange = function() {
-			if (xml.readyState == 4 && !requestDone) {
-				if (isHTTPSuccess(xml)) {
-					options.success(handleData(xml));
-				} else {
-					options.error();
+		if (typeof xml.withCredentials == 'undefined') {
+			xml.onreadystatechange = function() {
+				if (xml.readyState == 4 && !requestDone) {
+					if (isHTTPSuccess(xml)) {
+						options.success(handleData(xml));
+					} else {
+						options.error();
+					}
+					
+					options.complete();
+					
+					xml = null;
 				}
-				
-				options.complete();
-				
-				xhr = null;
-			}
-		};		
+			};	
+		} else {
+			xml.onload = function (e) {
+				options.success(e.target.responseText);
+			};
+			xml.onerror = function (e) {
+				options.error(e);
+			};
+			xml.onprogress = function (e) {
+				var ratio = e.loaded / e.total;
+				options.progress(ratio);
+			};
+		}
 		
 		if (!options.cache) {
 			xml.setRequestHeader('Cache-Control', 'no-cache, no-store');

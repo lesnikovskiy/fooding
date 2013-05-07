@@ -36,6 +36,9 @@
 			},
 			error: function () {
 				console.log(arguments);
+			},
+			progress: function(e) {
+				console.log(e);
 			}
 		});
 	
