@@ -20,7 +20,7 @@
 			this.id = ko.observable(note.id);
 			this.rev = ko.observable(note.rev);
 			this.title = ko.observable(note.title);
-			this.body = ko.observable(note.body);
+			this.body = ko.observable(note.body.replace(/\n/gi, '<br />'));
 			this.isSync = ko.observable(isSync);
 		}
 		
@@ -32,14 +32,18 @@
 			self.bodyText = ko.observable();
 			
 			self.addNote = function() {
-				var note = new Note({title: self.titleText(), body: self.bodyText()}, false);				
-				$.ajax({
+				var note = new Note({title: self.titleText(), body: self.bodyText()}, false);
+				
+				ajax({
 					type: 'POST',
 					url: '/api/notes',
-					data: ko.toJS(note),
-					success: function(data) {						
-						note.id(data.response.id);
-						note.rev(data.response.rev);
+					contentType: 'application/json',
+					data: ko.toJSON(note),
+					success: function(data) {	
+						var json = JSON.parse(data) || data;
+						
+						note.id(json.response.id);
+						note.rev(json.response.rev);
 						self.notes.push(note);
 						self.resetForm();
 					}
@@ -48,13 +52,15 @@
 			
 			self.removeNote = function(note) {
 				var note = note;
-				$.ajax({
+				ajax({
 					type: 'DELETE',
 					url: '/api/notes',
 					data: ko.toJSON(note),
 					contentType: 'application/json',
 					success: function(data) {
-						if (data.response && data.response.ok)
+						var json = JSON.parse(data) || data;
+						
+						if (json.response && json.response.ok)
 							self.notes.remove(note);
 					}
 				});

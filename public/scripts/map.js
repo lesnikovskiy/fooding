@@ -2,225 +2,7 @@
 	self.map;
 	var initLatCoord = 50.450946269314805;
 	var initLngCoord = 30.598297119140625;
-	var initZoom = 12;
-	
-	$el = function (el) {	
-		var elem = document.createElement(el);
-		
-		function _handleEvent(e) {
-			var returnValue = true;
-			
-			e = e || _fixEvent(window.event);
-			var handlers = elem.events[e.type];
-			
-			for (var i in handlers) {
-				this.$$handleEvent = handlers[i];
-				if (this.$$handleEvent(e) === false)
-					returnValue = false;
-			}
-			
-			return returnValue;
-		}
-		
-		function _fixEvent(e) {
-			e.preventDefault = _fixEvent.preventDefault;
-			e.stopPropagation = _fixEvent.stopPropagation;
-			
-			return e;
-		}
-		
-		_fixEvent.preventDefault = function() {
-			this.returnValue = false;
-		};
-		
-		_fixEvent.stopPropagation = function() {
-			this.cancelBubble = true;
-		};
-		
-		elem.setId = function(id) {
-			elem.id = id;
-			return this;
-		};
-		
-		elem.css = function(css) {
-			for (var i in css) 
-				elem.style[i] = css[i];
-				
-			return this;
-		};
-		
-		elem.attr = function(attr) {
-			for (var i in attr)
-				elem[i] = attr[i];
-				
-			return this;
-		};
-		
-		elem.text = function(txt) {
-			elem.appendChild(document.createTextNode(txt));
-			return this;
-		}
-		
-		elem.encodeText = function(txt) {
-			var textarea = document.createElement('textarea');
-			textarea.innerHTML = txt;			
-			elem.appendChild(document.createTextNode(textarea.innerHTML));
-			
-			return this;
-		};
-		
-		elem.decodeText = function(txt) {
-			var textarea = document.createElement('textarea');
-			textarea.innerHTML = txt;
-			elem.appendChild(document.createTextNode(textarea.value));
-			return this;
-		};
-		
-		elem.append = function(what) {
-			(elem || document).appendChild(what);			
-			return this;
-		};
-		
-		elem.before = function(sibling) {
-			sibling.parentNode.insertBefore(elem, sibling);
-			return this;
-		};
-		
-		elem.on = function(type, handler) {
-			if (!handler.$$guid)
-				handler.$$guid = elem.on.guid++;
-				
-			if (!elem.events)
-				elem.events = {};
-				
-			var handlers = elem.events[type];
-			if (!handlers) {
-				handlers = elem.events[type] = {};
-				
-				if (elem['on' + type]) {
-					handlers[0] = elem['on' + type];
-				}
-			}
-			
-			handlers[handler.$$guid] = handler;
-			elem['on' + type] = _handleEvent;			
-			
-			return this;
-		};
-		
-		elem.removeEvent = function(type, handler) {
-			if (elem.events && elem.events[type]) {
-				delete elem.events[type][handler.$$guid];
-			}
-		
-			return this;
-		};
-		
-		elem.on.guid = 1;
-		
-		elem.serialize = function() {
-			var self = this;
-			
-			if (!self.elements && self.elements.length == 0)
-				return '';
-				
-			var elems = [];
-			for (var i = 0; i < self.elements.length; i++) {
-				elems.push(self.elements[i].name + '=' + encodeURIComponent(self.elements[i].value));
-			}
-			
-			return elems.join('&');
-		};
-		
-		return elem;
-	};
-	
-	var $ajax = function (options) {
-		options = {
-			type: options.type || 'POST',
-			url: options.url || '',
-			timeout: options.timeout || 5000,
-			complete: options.complete || function() {},
-			error: options.error || function() {},
-			success: options.success || function() {},
-			progress: options.progress || function() {},
-			cache: typeof options.cache != 'undefined' ? options.cache : true,
-			contentType: options.contentType || options.type.toUpperCase() === 'POST' 
-													? 'application/x-www-form-urlencoded' 
-													: 'text/html; charset=UTF-8',
-			data: options.data || ''
-		};		
-
-		if (!options.cache) {			
-			options.url = options.url.indexOf('?') >= 0 
-				? options.url + '&' + (new Date()).getTime()
-				: options.url + '?' + (new Date()).getTime()
-		}
-		
-		if (typeof XMLHttpRequest == 'undefined') {
-			XMLHttpRequest = function() {
-				return new ActiveXObject(
-					navigator.userAgent.indexOf('MSIE 5') >= 0
-						? "Microsoft.XMLHTTP" : "Msxml2.XMLHTTP"
-				);
-			};
-		}
-		
-		var xml = new XMLHttpRequest();	
-		
-		xml.open(options.type, options.url, true);
-		
-		var timeoutLength = options.timeout;
-		var requestDone = false;
-		
-		setTimeout(function() {
-			requestDone = true;
-		}, timeoutLength);
-		
-		xml.onreadystatechange = function() {
-			if (xml.readyState == 4 && !requestDone) {
-				if (isHTTPSuccess(xml)) {
-					options.success(handleData(xml));
-				} else {
-					options.error();
-				}
-				
-				options.complete();
-				
-				xhr = null;
-			}
-		};		
-		
-		if (!options.cache) {
-			xml.setRequestHeader('Cache-Control', 'no-cache, no-store');
-		}
-		
-		if (options.contentType)
-			xml.setRequestHeader('Content-Type', options.contentType);
-		
-		if (xml.overrideMimeType)
-			xml.setRequestHeader('Connection', 'close');
-		
-		xml.send(options.data);
-		
-		function isHTTPSuccess(r) {
-			try {
-				return !r.status && location.protocol == 'file:' || 
-					(r.status >= 200 && r.status < 300) ||
-					r.status == 304 ||
-					navigator.userAgent.indexOf('Safari') >= 0
-						&& typeof r.status == 'undefined'
-			} catch (e) {}
-			
-			return false;
-		}
-		
-		function handleData(r) {
-			var ct = r.getResponseHeader('content-type');
-			
-			return !ct || ct.indexOf('xml') == -1 ? r.responseText : r.responseXML;
-		}
-	};	
+	var initZoom = 12;		
 	
 	self.pushMarkerToMap = function(coord) {
 		var title = $el('p').text('Title: ').text(coord.title);
@@ -241,10 +23,11 @@
 			desc: document.getElementById('desc').value
 		};
 				
-		$ajax({
+		ajax({
 			type: ctx.method,
 			url: ctx.action,
-			data: ctx.serialize(),			
+			data: ctx.serialize(),	
+			contentType: 'application/x-www-form-urlencoded',
 			success: function (data) {
 				var json = JSON.parse(data) || data;
 				if (json.response && json.response.ok) {
@@ -317,7 +100,7 @@
 			}
 		});		
 		
-		$ajax({
+		ajax({
 			type: 'GET',
 			url: '/api/map',
 			cache: false,

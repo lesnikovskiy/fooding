@@ -9,10 +9,11 @@
   <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine&amp;v1" />
   <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz" />
   <link rel="stylesheet" type="text/css" href="/style/style.css" />
-  <script type="text/javascript" src="/scripts/jquery-1.8.2.min.js"></script>
-  <script type="text/javascript" src="/scripts/jquery-ui.min.js"></script>
-  <!--<script type="text/javascript" src="/scripts/jquery.mobile-1.1.1.min.js"></script>-->
-  <script type="text/javascript" src="/scripts/knockout.min.js"></script>
+  <script type="text/javascript" src="/scripts/libs/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="/scripts/libs/jquery-ui.min.js"></script>
+  <!--<script type="text/javascript" src="/scripts/libs/jquery.mobile-1.1.1.min.js"></script>-->
+  <script type="text/javascript" src="/scripts/libs/knockout.min.js"></script>
+  <script type="text/javascript" src="/scripts/ajax.js"></script>
   <script type="text/javascript" src="/scripts/app.js"></script>
 </head>
 
@@ -63,7 +64,7 @@
         <h1>Todo Pad web application</h1>
 		<div data-bind="foreach: notes">
 			<h2 data-bind="text: title"></h2>
-			<p data-bind="text: body"></p>
+			<p data-bind="html: body"></p>
 			<p>
 				<a href="javascript:void(0);" data-bind="click: $root.removeNote">remove</a>
 			</p>
