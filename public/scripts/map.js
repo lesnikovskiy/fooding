@@ -1,4 +1,4 @@
-(function(self) {
+(function(self) {	
 	self.map;
 	var initLatCoord = 50.450946269314805;
 	var initLngCoord = 30.598297119140625;
@@ -11,41 +11,22 @@
 		
 		self.map.addOverlay(createMarker(new GLatLng(parseFloat(coord.lat), parseFloat(coord.lng)), div));
 		self.map.closeInfoWindow();
-	};
-
-	// Go with websocket
-	var wsSupport = false;
+	};	
 	
-	if (typeof WebSocket != 'undefined') {
-		var ws = new WebSocket('ws://localhost:3000', 'echo-protocol');
-		ws.onopen = function() {
-			console.log('Connection established');
-			wsSupport = true;
-		};
-		ws.onmessage = function (e) {
-			if (!e.data)
-				return;
-
-			var res = JSON.parse(e.data);
-			switch(res.act) {
-				case 'get':
-					for (var k = 0; k < res.coords.length; k++) {
-						self.pushMarkerToMap(res.coords[k]);
-					}
-					break;
-				case 'post':
-					if (res.coord)
-						self.pushMarkerToMap(res.coord);
-					break;
-			}
-		};
-		ws.onclose = function (e) {
-			console.log('Connection closed');
-		};
-		ws.onerror = function (e) {
-			console.log('Error occurred');
-		};
-	}
+	var socket = io.connect('http://localhost:3000');
+	socket.on('coords-response', function (data) {
+		console.log(data);
+		
+		var json = data;
+		for (var i = 0; i < json.coords.length; i++) {
+			self.pushMarkerToMap(json.coords[i]);
+		}
+	});
+	socket.on('push-response', function (data) {
+		if (data.ok) {
+			self.pushMarkerToMap(data);
+		}
+	});
 	
 	var submitMarker = function() {
 		var ctx = this;
@@ -56,30 +37,28 @@
 			title: document.getElementById('title').value,
 			desc: document.getElementById('desc').value
 		};
-
-		if (!wsSupport) {				
-			ajax({
-				type: ctx.method,
-				url: ctx.action,
-				data: ctx.serialize(),	
-				contentType: 'application/x-www-form-urlencoded',
-				success: function (data) {
-					var json = JSON.parse(data) || data;
-					if (json.response && json.response.ok) {
-						self.pushMarkerToMap(markerData);
-					}
-				},
-				error: function () {
-					console.log(arguments);
-				},
-				progress: function(e) {
-					console.log(e);
+		
+		socket.emit('post-coord', markerData);
+		
+		/*
+		ajax({
+			type: ctx.method,
+			url: ctx.action,
+			data: ctx.serialize(),	
+			contentType: 'application/x-www-form-urlencoded',
+			success: function (data) {
+				var json = JSON.parse(data) || data;
+				if (json.response && json.response.ok) {
+					self.pushMarkerToMap(markerData);
 				}
-			});
-		} else {
-			markerData.act = 'post';
-			ws.send(JSON.stringify(markerData));
-		}
+			},
+			error: function () {
+				console.log(arguments);
+			},
+			progress: function(e) {
+				console.log(e);
+			}
+		});*/
 	
 		return false;
 	};
@@ -115,15 +94,12 @@
 		return form;
 	};
 	
-	window.onload = function() {
-		debugger;
-		Modernizr.load({
-			test: window.JSON,
-			nope: '/scripts/libs/json2.js'
-		});
-
+	window.onload = function() {		
+		socket.emit('coords', {message: 'Please provide me coordinates for markers'});
+	
 		if (!GBrowserIsCompatible()) {
 			document.getElementById('map').innnerHTML = 'Your browser doesn\'t support google maps';
+			
 			return;		
 		};		
 		
@@ -148,21 +124,18 @@
 			}
 		});		
 		
-		if (!wsSupport) {
-			ajax({
-				type: 'GET',
-				url: '/api/map',
-				cache: false,
-				success: function (data) {
-					var json = JSON.parse(data) || data;
-					for (var i = 0; i < json.coords.length; i++) {
-						self.pushMarkerToMap(json.coords[i]);
-					}
+		/*
+		ajax({
+			type: 'GET',
+			url: '/api/map',
+			cache: false,
+			success: function (data) {
+				var json = JSON.parse(data) || data;
+				for (var i = 0; i < json.coords.length; i++) {
+					self.pushMarkerToMap(json.coords[i]);
 				}
-			});
-		} else {
-			ws.send(JSON.stringify({act: 'get'}));		
-		}
+			}
+		});*/
 	};
 
 	window.onunload = GUnload;
