@@ -15,6 +15,8 @@
 			else
 				alert('Shit happens');
 		});	*/
+
+		
 		
 		function Note(note, isSync) {			
 			this.id = ko.observable(note.id);

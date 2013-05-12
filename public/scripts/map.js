@@ -116,6 +116,12 @@
 	};
 	
 	window.onload = function() {
+		debugger;
+		Modernizr.load({
+			test: window.JSON,
+			nope: '/scripts/libs/json2.js'
+		});
+
 		if (!GBrowserIsCompatible()) {
 			document.getElementById('map').innnerHTML = 'Your browser doesn\'t support google maps';
 			return;		
